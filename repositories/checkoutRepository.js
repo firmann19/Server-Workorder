@@ -37,7 +37,9 @@ class CreateRepository {
   }
 
   static async getByEmail({ email }) {
-    const getCheckout = await Checkout.findOne({ where: { email } });
+    const getCheckout = await Checkout.findOne({
+      where: { email },
+    });
 
     return getCheckout;
   }
@@ -70,16 +72,13 @@ class CreateRepository {
     return getCheckoutById;
   }
 
-  static async updateByID({ id, user, infopergantian, tindakan, dikerjakan }) {
-    const updateCheckout = await Checkout.update(
-      {
-        tindakan,
-        dikerjakan,
-        infopergantian,
+  static async deleteByID({ id }) {
+    const deletedCheckout = await Checkout.destroy({
+      where: {
+        id: id,
       },
-      { where: { id } }
-    );
-    return updateCheckout;
+    });
+    return deletedCheckout;
   }
 }
 

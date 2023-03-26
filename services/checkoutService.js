@@ -1,5 +1,6 @@
 const CheckoutRepository = require("../repositories/checkoutRepository");
-const { verifMail } = require("./mail");
+const { disetujuiMail } = require("./mail");
+
 
 class CheckoutService {
   static async getAll({
@@ -46,6 +47,7 @@ class CheckoutService {
     departemen,
     permasalahan,
     email,
+    pemohon,
   }) {
     try {
       const createdCheckout = await CheckoutRepository.create({
@@ -55,10 +57,11 @@ class CheckoutService {
         departemen,
         permasalahan,
         email,
+        pemohon,
         otp: Math.floor(Math.random() * 9999),
       });
 
-      await verifMail(email, createdCheckout);
+      await disetujuiMail(email, createdCheckout);
 
       return {
         status: true,
@@ -69,7 +72,6 @@ class CheckoutService {
         },
       };
     } catch (error) {
-      console.log(error);
       return {
         status: false,
         status_code: 500,
@@ -113,7 +115,7 @@ class CheckoutService {
       if (Check.otp == otp) {
         const updatedCheckout = await CheckoutRepository.updateStatusWO({
           email,
-          statusWO: "verifikasi",
+          statusWO: "disetujui",
         });
 
         return {
@@ -126,7 +128,6 @@ class CheckoutService {
         };
       }
     } catch (error) {
-      console.log(error);
       return {
         status: false,
         status_code: 500,
@@ -164,23 +165,20 @@ class CheckoutService {
     }
   }
 
-  static async updateCheckout({ id, tindakan, dikerjakan, infopergantian }) {
+  static async deleteByID({ id }) {
     try {
+      const deletedCheckout = await CheckoutRepository.deleteByID({
+        id,
+      });
 
-        const updateCheckout = await CheckoutRepository.updateByID({
-          id,
-          tindakan,
-          dikerjakan,
-          infopergantian,
-        });
-        return {
-          status: true,
-          status_code: 200,
-          message: "Post updated successfully",
-          data: {
-            update_checkout: updateCheckout,
-          },
-      }
+      return {
+        status: true,
+        status_code: 200,
+        message: "Deleted Successfully",
+        data: {
+          deleted_checkout: deletedCheckout,
+        },
+      };
     } catch (error) {
       return {
         status: false,
@@ -192,6 +190,7 @@ class CheckoutService {
       };
     }
   }
+
 }
 
 module.exports = CheckoutService;

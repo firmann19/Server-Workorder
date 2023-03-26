@@ -26,7 +26,7 @@ app.post("/checkout", checkoutController.create)
 app.get("/checkout", checkoutController.getAll)
 app.get("/checkout/:id", checkoutController.getCheckoutID)
 app.put("/checkout/verifikasi", checkoutController.updateStatusCheckout)
-app.put("/checkout/:id", checkoutController.updateByID)
+app.delete("/checkout/:id", checkoutController.deleteByID)
 
 
 // Public File Access

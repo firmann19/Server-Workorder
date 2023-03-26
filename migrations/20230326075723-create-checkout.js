@@ -26,31 +26,13 @@ module.exports = {
       },
       statusWO: {
         type: Sequelize.ENUM,
-        values: ['verifikasi', 'belum verifikasi'],
-        defaultValue: 'belum verifikasi'
+        values: ["disetujui", "belum disetujui"],
+        defaultValue: "belum disetujui"
       },
       email: {
         type: Sequelize.STRING
       },
       otp: {
-        type: Sequelize.STRING
-      },
-      tindakan: {
-        type: Sequelize.STRING
-      },
-      infopergantian: {
-        type: Sequelize.STRING
-      },
-      pemohon: {
-        type: Sequelize.STRING
-      },
-      disetujui: {
-        type: Sequelize.STRING
-      },
-      dikerjakan: {
-        type: Sequelize.STRING
-      },
-      mengetahui: {
         type: Sequelize.STRING
       },
       createdAt: {
