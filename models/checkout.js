@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
       permasalahan: DataTypes.STRING,
       statusWO: {
         type: DataTypes.ENUM,
-        values: ["verifikasi", "belum verifikasi"],
-        defaultValue: "belum verifikasi",
+        values: ["disetujui", "belum disetujui"],
+        defaultValue: "belum disetujui",
       },
       email: DataTypes.STRING,
       otp: DataTypes.STRING,

@@ -86,16 +86,12 @@ const getCheckoutID = async (req, res, next) => {
   });
 };
 
-const updateByID = async (req, res, next) => {
+const deleteCheckoutID = async (req, res, next) => {
   const { id } = req.params;
-  const { tindakan, dikerjakan, infopergantian } = req.body;
 
   const { status, status_code, message, data } =
-    await checkoutService.updateCheckout({
+    await checkoutService.deleteByID({
       id,
-      tindakan,
-      dikerjakan,
-      infopergantian,
     });
 
   res.status(status_code).send({
@@ -105,4 +101,4 @@ const updateByID = async (req, res, next) => {
   });
 };
 
-module.exports = { create, updateStatusCheckout, getAll, getCheckoutID, updateByID };
+module.exports = { create, updateStatusCheckout, getAll, getCheckoutID, deleteCheckoutID };
