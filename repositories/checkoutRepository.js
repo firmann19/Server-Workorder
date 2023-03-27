@@ -1,21 +1,19 @@
-const { Checkout } = require("../models");
+const { Checkout, User } = require("../models");
 
-class CreateRepository {
+class CheckoutRepository {
   static async create({
-    user,
+    UserId,
     namaPeralatan,
     kodePeralatan,
-    departemen,
     permasalahan,
     email,
     statusWO,
     otp,
   }) {
     const createdCheckout = Checkout.create({
-      user,
+      UserId,
       namaPeralatan,
       kodePeralatan,
-      departemen,
       permasalahan,
       email,
       statusWO,
@@ -45,21 +43,28 @@ class CreateRepository {
   }
 
   static async getCheckout({
-    user,
+    UserId,
     namaPeralatan,
     kodePeralatan,
-    departemen,
     permasalahan,
     email,
   }) {
-    const getCheckout = Checkout.findAll(
-      user,
+    const getCheckout = Checkout.findAll({
+      include: [
+        {
+          model: User,
+          attributes: [
+            "name",
+            "departement"
+          ]
+        }
+      ],
+      UserId,
       namaPeralatan,
       kodePeralatan,
-      departemen,
       permasalahan,
       email
-    );
+    });
     return getCheckout;
   }
 
@@ -82,4 +87,4 @@ class CreateRepository {
   }
 }
 
-module.exports = CreateRepository;
+module.exports = CheckoutRepository;

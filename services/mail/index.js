@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const disetujuiMail = async (email, data) => {
+const verifMail = async (email, data) => {
   try {
     let template = fs.readFileSync("views/email/verifikasi.html", "utf8");
 
@@ -30,4 +30,4 @@ const disetujuiMail = async (email, data) => {
   }
 };
 
-module.exports = { disetujuiMail };
+module.exports = { verifMail };

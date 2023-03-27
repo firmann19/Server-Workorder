@@ -1,21 +1,20 @@
-const CheckoutRepository = require("../repositories/checkoutRepository");
+const LaporanRepository = require("../repositories/laporanRepository");
 const { verifMail } = require("./mail");
 
-
-class CheckoutService {
+class LaporanService {
   static async getAll({
-    UserId,
-    namaPeralatan,
-    kodePeralatan,
-    permasalahan,
+    CheckoutId,
+    tindakan,
+    gantiSparepart,
+    dikerjakan,
     email,
   }) {
     try {
-      const getAllCheckout = await CheckoutRepository.getCheckout({
-        UserId,
-        namaPeralatan,
-        kodePeralatan,
-        permasalahan,
+      const getAllLaporan = await LaporanRepository.getLaporan({
+        CheckoutId,
+        tindakan,
+        gantiSparepart,
+        dikerjakan,
         email,
       });
 
@@ -24,11 +23,11 @@ class CheckoutService {
         status_code: 200,
         message: "Get All successfully",
         data: {
-          getAll_checkout: getAllCheckout,
+          getAll_laporan: getAllLaporan,
         },
       };
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return {
         status: false,
         status_code: 500,
@@ -41,32 +40,30 @@ class CheckoutService {
   }
 
   static async create({
-    UserId,
-    namaPeralatan,
-    kodePeralatan,
-    permasalahan,
+    CheckoutId,
+    tindakan,
+    gantiSparepart,
+    dikerjakan,
     email,
-    pemohon,
   }) {
     try {
-      const createdCheckout = await CheckoutRepository.create({
-        UserId,
-        namaPeralatan,
-        kodePeralatan,
-        permasalahan,
+      const createdLaporan = await LaporanRepository.create({
+        CheckoutId,
+        tindakan,
+        gantiSparepart,
+        dikerjakan,
         email,
-        pemohon,
         otp: Math.floor(Math.random() * 9999),
       });
 
-      await verifMail(email, createdCheckout);
+      await verifMail(email, createdLaporan);
 
       return {
         status: true,
         status_code: 201,
         message: "Post created successfully",
         data: {
-          created_checkout: createdCheckout,
+          created_laporan: createdLaporan,
         },
       };
     } catch (error) {
@@ -84,7 +81,7 @@ class CheckoutService {
   static async updateStatus({ otp, email }) {
     try {
       // Melakukan check terhadap email
-      const Check = await CheckoutRepository.getByEmail({ email });
+      const Check = await LaporanRepository.getByEmail({ email });
 
       // Jika emailnya tidak terdaftar, maka akan memberikan message "Email tidak terdaftar"
       if (!Check) {
@@ -111,9 +108,9 @@ class CheckoutService {
       }
 
       if (Check.otp == otp) {
-        const updatedCheckout = await CheckoutRepository.updateStatusWO({
+        const updatedLaporan = await LaporanRepository.updateStatusLaporan({
           email,
-          statusWO: "disetujui",
+          statusLaporan: "diketahui",
         });
 
         return {
@@ -121,11 +118,12 @@ class CheckoutService {
           status_code: 200,
           message: "Updated Status successfully",
           data: {
-            updated_checkout: updatedCheckout,
+            updated_laporan: updatedLaporan,
           },
         };
       }
     } catch (error) {
+      console.log(error);
       return {
         status: false,
         status_code: 500,
@@ -137,9 +135,9 @@ class CheckoutService {
     }
   }
 
-  static async getCheckoutByID({ id }) {
+  static async getLaporanByID({ id }) {
     try {
-      const getCheckout = await CheckoutRepository.getCheckoutByID({
+      const getLaporan = await LaporanRepository.getLaporanByID({
         id,
       });
 
@@ -148,7 +146,7 @@ class CheckoutService {
         status_code: 200,
         message: "Success",
         data: {
-          checkout: getCheckout,
+          laporan: getLaporan,
         },
       };
     } catch (error) {
@@ -165,7 +163,7 @@ class CheckoutService {
 
   static async deleteByID({ id }) {
     try {
-      const deletedCheckout = await CheckoutRepository.deleteByID({
+      const deletedLaporan = await LaporanRepository.deleteByID({
         id,
       });
 
@@ -174,7 +172,7 @@ class CheckoutService {
         status_code: 200,
         message: "Deleted Successfully",
         data: {
-          deleted_checkout: deletedCheckout,
+          deleted_laporan: deletedLaporan,
         },
       };
     } catch (error) {
@@ -188,7 +186,6 @@ class CheckoutService {
       };
     }
   }
-
 }
 
-module.exports = CheckoutService;
+module.exports = LaporanService;

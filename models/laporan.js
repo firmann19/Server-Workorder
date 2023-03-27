@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Checkout extends Model {
+  class Laporan extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,24 +11,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.User)
+      this.belongsTo(models.Checkout)
     }
   }
-  Checkout.init({
-    UserId : DataTypes.INTEGER,
-    namaPeralatan: DataTypes.STRING,
-    kodePeralatan: DataTypes.STRING,
-    permasalahan: DataTypes.STRING,
-    statusWO: {
-      type: DataTypes.ENUM,
-      values: ["disetujui", "belum disetujui"],
-      defaultValue: "belum disetujui"
-        }, 
+  Laporan.init({
+    tindakan: DataTypes.STRING,
+    gantiSparepart: DataTypes.STRING,
+    dikerjakan: DataTypes.STRING,
     email: DataTypes.STRING,
+    statusLaporan: {
+      type: DataTypes.ENUM,
+      values: ["diketahui", "belum diketahui"],
+      defaultValue: "belum diketahui"
+    }, 
     otp: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'Checkout',
+    modelName: 'Laporan',
   });
-  return Checkout;
+  return Laporan;
 };

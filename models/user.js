@@ -11,13 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.hasMany(models.Checkout)
     }
   }
   User.init({
     name: DataTypes.STRING,
     email: DataTypes.STRING,
     picture: DataTypes.TEXT,
-    role: DataTypes.STRING,
+    role: {
+      type: DataTypes.ENUM,
+      values: ["admin", "user"]
+    }, 
     position: DataTypes.STRING,
     departement: DataTypes.STRING,
     password: DataTypes.STRING
