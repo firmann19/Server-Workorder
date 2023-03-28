@@ -25,5 +25,8 @@ module.exports = {
   },
 
   gmail: process.env.GMAIL,
-  password: process.env.PASSWORD     
+  password: process.env.PASSWORD,
+  jwtExpiration: process.env.JWT_EXPIRATION,
+  jwtSecret: process.env.JWT_SECRET_KEY 
+
 };

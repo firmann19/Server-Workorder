@@ -1,8 +1,6 @@
 const usersRepository = require("../repositories/usersRepository");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-
-const { JWT } = require("../lib/const");
+const { createJWT } = require("../utils/jwt");
+const { createTokenUser } = require("../utils/createTokenUser");
 
 const SALT_ROUND = 10;
 
@@ -137,7 +135,7 @@ class AuthService {
         };
       }
     } catch (err) {
-      console.log(err)
+      console.log(err);
       return {
         status: false,
         status_code: 500,
@@ -156,7 +154,7 @@ class AuthService {
         return {
           status: false,
           status_code: 400,
-          message: "Email wajib diisi",
+          message: "wajib diisi",
           data: {
             registered_user: null,
           },
@@ -194,54 +192,22 @@ class AuthService {
             user: null,
           },
         };
-      } else if (!getUser.password) {
+      } 
+       
+
+        const token = createJWT({ payload: createTokenUser(getUser) });
+
         return {
-          status: false,
-          status_code: 400,
-          message: "Akun ini belum melakukan setup password.",
+          status: true,
+          status_code: 200,
+          message: "User berhasil login",
           data: {
-            user: null,
+            token,
           },
         };
-      } else {
-        const isPasswordMatch = await bcrypt.compare(
-          password,
-          getUser.password
-        );
-
-        if (isPasswordMatch) {
-          const token = jwt.sign(
-            {
-              id: getUser.id,
-              email: getUser.email,
-            },
-            JWT.SECRET,
-            {
-              expiresIn: JWT.EXPIRED,
-            }
-          );
-
-          return {
-            status: true,
-            status_code: 200,
-            message: "User berhasil login",
-            data: {
-              token,
-            },
-          };
-        } else {
-          return {
-            status: false,
-            status_code: 400,
-            message: "Password salah",
-            data: {
-              user: null,
-            },
-          };
-        }
-      }
+     
     } catch (err) {
-      console.log(err)
+      console.log(err);
       return {
         status: false,
         status_code: 500,
