@@ -9,6 +9,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      CheckoutId: {
+        type: Sequelize.INTEGER
+      },
       tindakan: {
         type: Sequelize.STRING
       },

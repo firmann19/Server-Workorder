@@ -2,34 +2,17 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Checkouts', {
+    await queryInterface.createTable('RefreshTokens', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      UserId: {
+      PenggunaId: {
         type: Sequelize.INTEGER
       },
-      namaPeralatan: {
-        type: Sequelize.STRING
-      },
-      kodePeralatan: {
-        type: Sequelize.STRING
-      },
-      permasalahan: {
-        type: Sequelize.STRING
-      },
-      statusWO: {
-        type: Sequelize.ENUM,
-        values: ["disetujui", "belum disetujui"],
-        defaultValue: "belum disetujui"
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      otp: {
+      refreshToken: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -43,6 +26,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Checkouts');
+    await queryInterface.dropTable('RefreshTokens');
   }
 };

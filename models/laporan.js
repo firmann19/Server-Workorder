@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Laporan.init({
+    CheckoutId: DataTypes.INTEGER,
     tindakan: DataTypes.STRING,
     gantiSparepart: DataTypes.STRING,
     dikerjakan: DataTypes.STRING,
@@ -24,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       values: ["diketahui", "belum diketahui"],
       defaultValue: "belum diketahui"
     }, 
-    otp: DataTypes.STRING
+    otp: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Laporan',

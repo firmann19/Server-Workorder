@@ -3,14 +3,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.addColumn("Checkouts", "UserId", {
+    await queryInterface.addColumn("RefreshTokens", "PenggunaId", {
       type: Sequelize.INTEGER
     })
 
-    await queryInterface.addConstraint("Checkouts", {
-      fields: ["UserId"],
+    await queryInterface.addConstraint("RefreshTokens", {
+      fields: ["PenggunaId"],
       type: "foreign key",
-      name: "user_fk",
+      name: "pengguna_fk",
       references: {
         table: "Users",
         field: "id"
@@ -21,7 +21,7 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.removeConstraint("Checkouts", "user_fk")
-    await queryInterface.removeColumn("Checkouts", "userId")
+    await queryInterface.removeConstraint("RefreshTokens", "user_fk")
+    await queryInterface.removeColumn("RefreshTokens", "PenggunaId")
   }
 };

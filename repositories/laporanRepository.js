@@ -1,4 +1,4 @@
-const { Checkout, Laporan, User } = require("../models");
+const { Checkout, Laporan } = require("../models");
 
 class LaporanRepository {
   static async create({

@@ -1,6 +1,8 @@
 const usersRepository = require("../repositories/usersRepository");
-const { createJWT } = require("../utils/jwt");
+const { createJWT, createRefreshJWT } = require("../utils/jwt");
 const { createTokenUser } = require("../utils/createTokenUser");
+const bcrypt = require("bcrypt");
+const { createUserRefreshToken } = require("./refreshTokenService");
 
 const SALT_ROUND = 10;
 
@@ -197,12 +199,16 @@ class AuthService {
 
         const token = createJWT({ payload: createTokenUser(getUser) });
 
+        const refreshToken = createRefreshJWT({payload: createTokenUser(getUser)});
+        await createUserRefreshToken({refreshToken, user: getUser.id})
+
         return {
           status: true,
           status_code: 200,
           message: "User berhasil login",
           data: {
             token,
+            refreshToken
           },
         };
      
