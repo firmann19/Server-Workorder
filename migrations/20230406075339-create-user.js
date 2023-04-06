@@ -15,21 +15,12 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
-      picture: {
-        type: Sequelize.TEXT
+      posisi: {
+        type: Sequelize.STRING
       },
-      role: {
+      roles: {
         type: Sequelize.ENUM,
         values: ["admin", "user"]
-      },
-      position: {
-        type: Sequelize.STRING
-      },
-      departement: {
-        type: Sequelize.STRING
-      },
-      password: {
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

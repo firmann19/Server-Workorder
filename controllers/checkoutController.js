@@ -28,7 +28,6 @@ const create = async (req, res, next) => {
     namaPeralatan,
     kodePeralatan,
     permasalahan,
-    email,
     otp,
   } = req.body;
 
@@ -37,7 +36,6 @@ const create = async (req, res, next) => {
     namaPeralatan,
     kodePeralatan,
     permasalahan,
-    email,
     otp,
   });
 

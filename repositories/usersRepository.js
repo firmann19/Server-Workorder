@@ -20,6 +20,7 @@ class UsersRepository {
     position,
     departement,
     role,
+    group,
     picture,
   }) {
     const createdUser = User.create({
@@ -27,12 +28,34 @@ class UsersRepository {
       email,
       position,
       departement,
+      group,
       password,
       role,
       picture,
     });
 
     return createdUser;
+  }
+
+  static async getUsers({
+    name,
+    email,
+    position,
+    departement,
+    role,
+    group,
+    picture,
+  }) {
+    const getCheckout = User.findAll({
+      name,
+      email,
+      position,
+      departement,
+      role,
+      group,
+      picture,
+    });
+    return this.getUsers;
   }
 
   static async deleteByID({ id }) {

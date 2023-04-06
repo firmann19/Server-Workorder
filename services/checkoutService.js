@@ -1,6 +1,7 @@
 const CheckoutRepository = require("../repositories/checkoutRepository");
 const { verifMail } = require("./mail");
-
+const User = require("../models");
+const UsersRepository = require("../repositories/usersRepository");
 
 class CheckoutService {
   static async getAll({
@@ -45,18 +46,20 @@ class CheckoutService {
     namaPeralatan,
     kodePeralatan,
     permasalahan,
-    email,
-    pemohon,
+    email
   }) {
     try {
+      const email = await User.findOne({
+        where: { email },
+      });
+
       const createdCheckout = await CheckoutRepository.create({
         UserId,
+        email,
         namaPeralatan,
         kodePeralatan,
         permasalahan,
-        email,
-        pemohon,
-        otp: Math.floor(Math.random() * 9999),
+        otp: Math.floor(Math.random()*9999) 
       });
 
       await verifMail(email, createdCheckout);
@@ -70,6 +73,7 @@ class CheckoutService {
         },
       };
     } catch (error) {
+      console.log(error)
       return {
         status: false,
         status_code: 500,

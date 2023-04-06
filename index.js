@@ -31,31 +31,30 @@ app.use(`${v1}`, refreshTokenRouter)
 
 //Checkout
 app.post(
-  "/checkout",
+  "/api/v1/checkout",
   authenticateUser,
-  authorizeRoles("admin"),
   checkoutController.create
 );
 app.get(
-  "/checkout",
+  "/api/v1/checkout",
   authenticateUser,
   authorizeRoles("admin"),
   checkoutController.getAll
 );
 app.get(
-  "/checkout/:id",
+  "/api/v1/checkout/:id",
   authenticateUser,
   authorizeRoles("admin"),
   checkoutController.getCheckoutID
 );
 app.put(
-  "/checkout/verifikasi",
+  "/api/v1/checkout/verifikasi",
   authenticateUser,
   authorizeRoles("admin"),
   checkoutController.updateStatusCheckout
 );
 app.delete(
-  "/checkout/:id",
+  "/api/v1/checkout/:id",
   authenticateUser,
   authorizeRoles("admin"),
   checkoutController.deleteCheckoutID
@@ -63,31 +62,31 @@ app.delete(
 
 //Laporan
 app.post(
-  "/laporan",
+  "/api/v1/laporan",
   authenticateUser,
   authorizeRoles("admin"),
   laporanController.create
 );
 app.get(
-  "/laporan",
+  "/api/v1/laporan",
   authenticateUser,
   authorizeRoles("admin"),
   laporanController.getAll
 );
 app.get(
-  "/laporan/:id",
+  "/api/v1/laporan/:id",
   authenticateUser,
   authorizeRoles("admin"),
   laporanController.getLaporanID
 );
 app.put(
-  "/laporan/diketahui",
+  "/api/v1/laporan/diketahui",
   authenticateUser,
   authorizeRoles("admin"),
   laporanController.updateStatusLaporan
 );
 app.delete(
-  "/laporan/:id",
+  "/api/v1/laporan/:id",
   authenticateUser,
   authorizeRoles("admin"),
   laporanController.deleteLaporanID

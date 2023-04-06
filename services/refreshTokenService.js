@@ -55,6 +55,7 @@ const getUserRefreshToken = async (req) => {
       },
     };
   } catch (error) {
+    console.log(error)
     return {
       status: false,
       status_code: 500,

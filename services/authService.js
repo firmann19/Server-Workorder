@@ -14,6 +14,7 @@ class AuthService {
     departement,
     password,
     role,
+    group,
     picture,
   }) {
     try {
@@ -122,6 +123,7 @@ class AuthService {
           email,
           position,
           departement,
+          group,
           password: hashedPassword,
           role,
           picture,
@@ -194,30 +196,73 @@ class AuthService {
             user: null,
           },
         };
-      } 
-       
+      }
 
-        const token = createJWT({ payload: createTokenUser(getUser) });
+      const token = createJWT({ payload: createTokenUser(getUser) });
 
-        const refreshToken = createRefreshJWT({payload: createTokenUser(getUser)});
-        await createUserRefreshToken({refreshToken, user: getUser.id})
+      const refreshToken = createRefreshJWT({
+        payload: createTokenUser(getUser),
+      });
+      await createUserRefreshToken({ refreshToken, user: getUser.id });
 
-        return {
-          status: true,
-          status_code: 200,
-          message: "User berhasil login",
-          data: {
-            token,
-            refreshToken
-          },
-        };
-     
+      return {
+        status: true,
+        status_code: 200,
+        message: "User berhasil login",
+        data: {
+          token,
+          refreshToken,
+        },
+      };
     } catch (err) {
       console.log(err);
       return {
         status: false,
         status_code: 500,
         message: err.message,
+        data: {
+          registered_user: null,
+        },
+      };
+    }
+  }
+
+  static async getAll({
+    name,
+    email,
+    password,
+    position,
+    departement,
+    role,
+    group,
+    picture,
+  }) {
+    try {
+      const getAllUsers = await usersRepository.getUsers({
+        name,
+        email,
+        password,
+        position,
+        departement,
+        role,
+        group,
+        picture,
+      });
+
+      return {
+        status: true,
+        status_code: 200,
+        message: "Get All successfully",
+        data: {
+          getAll_Users: getAllUsers,
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        status: false,
+        status_code: 500,
+        message: error.message,
         data: {
           registered_user: null,
         },

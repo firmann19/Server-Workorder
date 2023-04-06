@@ -6,8 +6,8 @@ class CheckoutRepository {
     namaPeralatan,
     kodePeralatan,
     permasalahan,
-    email,
     statusWO,
+    email,
     otp,
   }) {
     const createdCheckout = Checkout.create({
@@ -15,8 +15,8 @@ class CheckoutRepository {
       namaPeralatan,
       kodePeralatan,
       permasalahan,
-      email,
       statusWO,
+      email,
       otp,
     });
 
