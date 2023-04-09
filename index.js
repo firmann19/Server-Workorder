@@ -9,8 +9,8 @@ const app = express();
 // Import router
 const authRouter = require("./router/userRouter");
 const checkoutController = require("./controllers/checkoutController");
-const laporanController = require("./controllers/laporanController");
-const refreshTokenRouter = require("./router/refreshTokenRouter")
+const departementController = require("./controllers/departementController")
+const groupController = require("./controllers/groupController")
 
 // membuat variabel v1
 const v1 = "/api/v1";
@@ -27,7 +27,58 @@ app.use(express.static(path.join(__dirname, "/public")));
 
 // gunakan categories router
 app.use(`${v1}`, authRouter);
-app.use(`${v1}`, refreshTokenRouter)
+
+//Departement
+app.post(
+  "/api/v1/departement",
+  departementController.create
+);
+
+app.get(
+  "/api/v1/departement",
+  departementController.getAll
+)
+
+app.get(
+  "/api/v1/departement/:id",
+  departementController.getById
+)
+
+app.put(
+  "/api/v1/departement/:id",
+  departementController.update
+)
+
+app.delete(
+  "/api/v1/departement/:id",
+  departementController.deleteById
+)
+
+//Group
+app.post(
+  "/api/v1/group",
+  groupController.create
+);
+
+app.get(
+  "/api/v1/group",
+  groupController.getAll
+)
+
+app.get(
+  "/api/v1/group/:id",
+  groupController.getById
+)
+
+app.put(
+  "/api/v1/group/:id",
+  groupController.update
+)
+
+app.delete(
+  "/api/v1/group/:id",
+  groupController.deleteById
+)
 
 //Checkout
 app.post(
@@ -58,38 +109,6 @@ app.delete(
   authenticateUser,
   authorizeRoles("admin"),
   checkoutController.deleteCheckoutID
-);
-
-//Laporan
-app.post(
-  "/api/v1/laporan",
-  authenticateUser,
-  authorizeRoles("admin"),
-  laporanController.create
-);
-app.get(
-  "/api/v1/laporan",
-  authenticateUser,
-  authorizeRoles("admin"),
-  laporanController.getAll
-);
-app.get(
-  "/api/v1/laporan/:id",
-  authenticateUser,
-  authorizeRoles("admin"),
-  laporanController.getLaporanID
-);
-app.put(
-  "/api/v1/laporan/diketahui",
-  authenticateUser,
-  authorizeRoles("admin"),
-  laporanController.updateStatusLaporan
-);
-app.delete(
-  "/api/v1/laporan/:id",
-  authenticateUser,
-  authorizeRoles("admin"),
-  laporanController.deleteLaporanID
 );
 
 // Public File Access

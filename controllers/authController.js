@@ -1,17 +1,17 @@
 const authService = require("../services/authService");
 
 const register = async (req, res) => {
-  const { name, email, position, departement, group, password, role } = req.body;
+  const { name, email, posisi, password, roles, DepartementId, GroupId } =
+    req.body;
 
   const { status, status_code, message, data } = await authService.register({
     name,
     email,
-    position,
-    departement,
+    posisi,
     password,
-    group,
-    role,
-    picture: req.uploaded_picture,
+    roles,
+    DepartementId,
+    GroupId,
   });
 
   res.status(status_code).send({
@@ -37,26 +37,17 @@ const login = async (req, res) => {
 };
 
 const getAll = async (req, res, next) => {
-  const {
-    name,
-    email,
-    position,
-    departement,
-    password,
-    group,
-    role,
-    picture
-  } = req.body;
+  const { name, email, posisi, password, roles, DepartementId, GroupId } =
+    req.body;
 
   const { status, status_code, message, data } = await authService.getAll({
     name,
     email,
     position,
-    departement,
     password,
-    group,
-    role,
-    picture
+    roles,
+    DepartementId,
+    GroupId,
   });
 
   res.status(status_code).send({

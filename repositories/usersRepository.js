@@ -17,21 +17,19 @@ class UsersRepository {
     name,
     email,
     password,
-    position,
-    departement,
-    role,
-    group,
-    picture,
+    posisi,
+    roles,
+    DepartementId,
+    GroupId
   }) {
     const createdUser = User.create({
       name,
       email,
-      position,
-      departement,
-      group,
+      posisi,
       password,
-      role,
-      picture,
+      roles,
+      DepartementId,
+      GroupId
     });
 
     return createdUser;
@@ -41,19 +39,17 @@ class UsersRepository {
     name,
     email,
     position,
-    departement,
-    role,
-    group,
-    picture,
+    roles,
+    DepartementId,
+    GroupId
   }) {
     const getCheckout = User.findAll({
       name,
       email,
       position,
-      departement,
-      role,
-      group,
-      picture,
+      roles,
+      DepartementId,
+      GroupId
     });
     return this.getUsers;
   }
