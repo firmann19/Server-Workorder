@@ -1,41 +1,25 @@
-const checkoutService = require("../services/checkoutService");
-
-const getAll = async (req, res, next) => {
-  const {
-    namaPeralatan,
-    kodePeralatan,
-    permasalahan,
-    email,
-  } = req.body;
-
-  const { status, status_code, message, data } = await checkoutService.getAll({
-    namaPeralatan,
-    kodePeralatan,
-    permasalahan,
-    email,
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
-};
+const CheckoutService = require("../services/checkoutService");
 
 const create = async (req, res, next) => {
   const {
-    UserId,
-    namaPeralatan,
-    kodePeralatan,
     permasalahan,
+    tindakan,
+    gantiSparepart,
+    peralatanId,
+    userRequestId,
+    userApproveId,
+    userITid,
     otp,
   } = req.body;
 
-  const { status, status_code, message, data } = await checkoutService.create({
-    UserId,
-    namaPeralatan,
-    kodePeralatan,
+  const { status, status_code, message, data } = await CheckoutService.create({
     permasalahan,
+    tindakan,
+    gantiSparepart,
+    peralatanId,
+    userRequestId,
+    userApproveId,
+    userITid,
     otp,
   });
 
@@ -46,15 +30,28 @@ const create = async (req, res, next) => {
   });
 };
 
-const updateStatusCheckout = async (req, res, next) => {
-  const { email, otp, statusWO } = req.body;
+const getAll = async (req, res, next) => {
+  const {
+    permasalahan,
+    tindakan,
+    gantiSparepart,
+    peralatanId,
+    userRequestId,
+    userApproveId,
+    userITid,
+    otp,
+  } = req.body;
 
-  const { status, status_code, message, data } =
-    await checkoutService.updateStatus({
-      otp,
-      statusWO,
-      email,
-    });
+  const { status, status_code, message, data } = await CheckoutService.getAll({
+    permasalahan,
+    tindakan,
+    gantiSparepart,
+    peralatanId,
+    userRequestId,
+    userApproveId,
+    userITid,
+    otp,
+  });
 
   res.status(status_code).send({
     status: status,
@@ -63,11 +60,11 @@ const updateStatusCheckout = async (req, res, next) => {
   });
 };
 
-const getCheckoutID = async (req, res, next) => {
+const getById = async (req, res, next) => {
   const { id } = req.params;
 
   const { status, status_code, message, data } =
-    await checkoutService.getCheckoutByID({
+    await CheckoutService.getCheckoutById({
       id,
     });
 
@@ -78,11 +75,43 @@ const getCheckoutID = async (req, res, next) => {
   });
 };
 
-const deleteCheckoutID = async (req, res, next) => {
+const update = async (req, res, next) => {
+  const { id } = req.params;
+
+  const {
+    permasalahan,
+    tindakan,
+    gantiSparepart,
+    peralatanId,
+    userRequestId,
+    userApproveId,
+    userITid,
+  } = req.body;
+
+  const { status, status_code, message, data } =
+    await CheckoutService.updateCheckout({
+      id,
+      permasalahan,
+      tindakan,
+      gantiSparepart,
+      peralatanId,
+      userRequestId,
+      userApproveId,
+      userITid,
+    });
+
+  res.status(status_code).send({
+    status: status,
+    message: message,
+    data: data,
+  });
+};
+
+const deleteById = async (req, res, next) => {
   const { id } = req.params;
 
   const { status, status_code, message, data } =
-    await checkoutService.deleteByID({
+    await CheckoutService.deleteCheckout({
       id,
     });
 
@@ -93,4 +122,4 @@ const deleteCheckoutID = async (req, res, next) => {
   });
 };
 
-module.exports = { create, updateStatusCheckout, getAll, getCheckoutID, deleteCheckoutID };
+module.exports = { create, getAll, getById, update, deleteById };

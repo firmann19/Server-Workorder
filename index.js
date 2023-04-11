@@ -7,114 +7,82 @@ const port = 7000;
 const app = express();
 
 // Import router
-const authRouter = require("./router/userRouter");
+const authController = require("./controllers/authController");
+const departementController = require("./controllers/departementController");
+const groupController = require("./controllers/groupController");
+const peralatanController = require("./controllers/peralatanController");
 const checkoutController = require("./controllers/checkoutController");
-const departementController = require("./controllers/departementController")
-const groupController = require("./controllers/groupController")
-
-// membuat variabel v1
-const v1 = "/api/v1";
 
 // Import Middlewares
 const { authenticateUser, authorizeRoles } = require("./middlewares/auth");
 
-app.use(cors())
-app.use(logger("dev"))
+app.use(cors());
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser())
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "/public")));
 
-// gunakan categories router
-app.use(`${v1}`, authRouter);
+//Checkout
+app.post("/api/v1/checkout", checkoutController.create);
+
+app.get("/api/v1/checkout", checkoutController.getAll);
+
+app.get("/api/v1/checkout/:id", checkoutController.getById);
+
+app.put("/api/v1/checkout/:id", checkoutController.update);
+
+app.delete("/api/v1/checkout/:id", checkoutController.deleteById);
+
+//User
+app.post("/api/v1/auth/signin", authController.login);
+
+app.post("/api/v1/auth/signup", authController.register);
+
+app.get("/api/v1/user", authController.getAll);
+
+app.get("/api/v1/user/:id", authController.getById);
+
+app.put("/api/v1/user/:id", authController.update);
+
+app.delete("/api/v1/user/:id", authController.deleteById);
 
 //Departement
-app.post(
-  "/api/v1/departement",
-  departementController.create
-);
+app.post("/api/v1/departement", departementController.create);
 
-app.get(
-  "/api/v1/departement",
-  departementController.getAll
-)
+app.get("/api/v1/departement", departementController.getAll);
 
-app.get(
-  "/api/v1/departement/:id",
-  departementController.getById
-)
+app.get("/api/v1/departement/:id", departementController.getById);
 
-app.put(
-  "/api/v1/departement/:id",
-  departementController.update
-)
+app.put("/api/v1/departement/:id", departementController.update);
 
-app.delete(
-  "/api/v1/departement/:id",
-  departementController.deleteById
-)
+app.delete("/api/v1/departement/:id", departementController.deleteById);
 
 //Group
-app.post(
-  "/api/v1/group",
-  groupController.create
-);
+app.post("/api/v1/group", groupController.create);
 
-app.get(
-  "/api/v1/group",
-  groupController.getAll
-)
+app.get("/api/v1/group", groupController.getAll);
 
-app.get(
-  "/api/v1/group/:id",
-  groupController.getById
-)
+app.get("/api/v1/group/:id", groupController.getById);
 
-app.put(
-  "/api/v1/group/:id",
-  groupController.update
-)
+app.put("/api/v1/group/:id", groupController.update);
 
-app.delete(
-  "/api/v1/group/:id",
-  groupController.deleteById
-)
+app.delete("/api/v1/group/:id", groupController.deleteById);
 
-//Checkout
-app.post(
-  "/api/v1/checkout",
-  authenticateUser,
-  checkoutController.create
-);
-app.get(
-  "/api/v1/checkout",
-  authenticateUser,
-  authorizeRoles("admin"),
-  checkoutController.getAll
-);
-app.get(
-  "/api/v1/checkout/:id",
-  authenticateUser,
-  authorizeRoles("admin"),
-  checkoutController.getCheckoutID
-);
-app.put(
-  "/api/v1/checkout/verifikasi",
-  authenticateUser,
-  authorizeRoles("admin"),
-  checkoutController.updateStatusCheckout
-);
-app.delete(
-  "/api/v1/checkout/:id",
-  authenticateUser,
-  authorizeRoles("admin"),
-  checkoutController.deleteCheckoutID
-);
+//Peralatan
+app.post("/api/v1/peralatan", peralatanController.create);
 
-// Public File Access
+app.get("/api/v1/peralatan", peralatanController.getAll);
 
-app.listen(port, () => {
-  console.log(`Server berhasil berjalan di port http://localhost:${port}`);
-});
+app.get("/api/v1/peralatan/:id", peralatanController.getById);
+
+app.put("/api/v1/peralatan/:id", peralatanController.update);
+
+app.delete("/api/v1/peralatan/:id", peralatanController.deleteById) /
+  // Public File Access
+
+  app.listen(port, () => {
+    console.log(`Server berhasil berjalan di port http://localhost:${port}`);
+  });
 
 module.exports = app;

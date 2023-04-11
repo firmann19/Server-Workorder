@@ -1,18 +1,6 @@
 const { User } = require("../models");
 
-class UsersRepository {
-  static async getByID({ id }) {
-    const getUser = await User.findOne({ where: { id } });
-
-    return getUser;
-  }
-
-  static async getByEmail({ email }) {
-    const getUser = await User.findOne({ where: { email } });
-
-    return getUser;
-  }
-
+class UserRepository {
   static async create({
     name,
     email,
@@ -20,45 +8,93 @@ class UsersRepository {
     posisi,
     roles,
     DepartementId,
-    GroupId
+    GroupId,
   }) {
-    const createdUser = User.create({
+    const createUser = User.create({
       name,
       email,
-      posisi,
       password,
+      posisi,
       roles,
       DepartementId,
-      GroupId
+      GroupId,
     });
 
-    return createdUser;
+    return createUser;
   }
 
-  static async getUsers({
+  static async getByEmail({ email }) {
+    const getUserByEmail = await User.findOne({
+      where: { email },
+    });
+
+    
+
+    return getUserByEmail;
+  }
+
+  static async getById({ id }) {
+    const getUserById = await User.findOne({
+      where: { id },
+    });
+
+    return getUserById;
+  }
+
+  static async getAllUser({
     name,
     email,
-    position,
+    password,
+    posisi,
     roles,
     DepartementId,
-    GroupId
+    GroupId,
   }) {
-    const getCheckout = User.findAll({
+    const getAllUser = User.findAll({
       name,
       email,
-      position,
+      password,
+      posisi,
       roles,
       DepartementId,
-      GroupId
+      GroupId,
     });
-    return this.getUsers;
+
+    return getAllUser;
   }
 
-  static async deleteByID({ id }) {
-    const deletedUser = await User.destroy({ where: { id } });
+  static async updateUser({
+    id,
+    name,
+    email,
+    password,
+    posisi,
+    roles,
+    DepartementId,
+    GroupId,
+  }) {
+    const updateUser = User.update(
+      {
+        name,
+        email,
+        password,
+        posisi,
+        roles,
+        DepartementId,
+        GroupId,
+      },
+      { where: { id } }
+    );
+    return updateUser;
+  }
 
-    return deletedUser;
+  static async deleteById({ id }) {
+    const deleteUser = await User.destroy({
+      where: { id },
+    });
+
+    return deleteUser;
   }
 }
 
-module.exports = UsersRepository;
+module.exports = UserRepository

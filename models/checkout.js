@@ -16,8 +16,12 @@ module.exports = (sequelize, DataTypes) => {
   Checkout.init({
     permasalahan: DataTypes.STRING,
     tindakan: DataTypes.STRING,
-    gantiSparepart: DataTypes.STRING,
-    otp: DataTypes.STRING
+    gantisparepart: DataTypes.STRING,
+    otp: DataTypes.STRING,
+    userApproveId: DataTypes.INTEGER,
+    userRequestId: DataTypes.INTEGER,
+    userITid: DataTypes.INTEGER,
+    peralatanId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Checkout',

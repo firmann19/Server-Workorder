@@ -13,13 +13,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const verifMail = async (email, data) => {
+const verifMail = async (userApproveID, data) => {
   try {
     let template = fs.readFileSync("views/email/verifikasi.html", "utf8");
 
     let message = {
       from: "'WorkOrder HTA' <no-reply@gmail.com>",
-      to: email,
+      to: userApproveID,
       subject: "Verifikasi Work Order",
       html: Mustache.render(template, data),
     };

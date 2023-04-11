@@ -1,6 +1,6 @@
 const { Group } = require("../models");
 
-class DepartementRepository {
+class GroupRepository {
   static async create({ nama }) {
     const createGroup = Group.create({
       nama,
@@ -44,4 +44,4 @@ class DepartementRepository {
   }
 }
 
-module.exports = DepartementRepository;
+module.exports = GroupRepository;

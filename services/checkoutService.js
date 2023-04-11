@@ -1,23 +1,70 @@
 const CheckoutRepository = require("../repositories/checkoutRepository");
 const { verifMail } = require("./mail");
-const User = require("../models");
-const UsersRepository = require("../repositories/usersRepository");
 
 class CheckoutService {
-  static async getAll({
-    UserId,
-    namaPeralatan,
-    kodePeralatan,
+  static async create({
     permasalahan,
-    email,
+    tindakan,
+    gantiSparepart,
+    peralatanId,
+    userRequestId,
+    userApproveId,
+    userITid,
   }) {
     try {
-      const getAllCheckout = await CheckoutRepository.getCheckout({
-        UserId,
-        namaPeralatan,
-        kodePeralatan,
+      const createdCheckout = await CheckoutRepository.create({
         permasalahan,
-        email,
+        tindakan,
+        gantiSparepart,
+        peralatanId,
+        userRequestId,
+        userApproveId,
+        userITid,
+        otp : Math.floor(Math.random() * 9999)
+      });
+
+      await verifMail(userApproveId, createdCheckout);
+
+      return {
+        status: true,
+        status_code: 201,
+        message: "Post created successfully",
+        data: {
+          created_checkout: createdCheckout,
+        },
+      };
+    } catch (error) {
+      return {
+        status: false,
+        status_code: 500,
+        message: error.message,
+        data: {
+          created_checkout: null,
+        },
+      };
+    }
+  }
+
+  static async getAll({
+    permasalahan,
+    tindakan,
+    gantiSparepart,
+    peralatanId,
+    userRequestId,
+    userApproveId,
+    userITid,
+    otp,
+  }) {
+    try {
+      const getAllCheckout = await CheckoutRepository.getAllCheckout({
+        permasalahan,
+        tindakan,
+        gantiSparepart,
+        peralatanId,
+        userRequestId,
+        userApproveId,
+        userITid,
+        otp,
       });
 
       return {
@@ -29,130 +76,114 @@ class CheckoutService {
         },
       };
     } catch (error) {
-      console.log(error)
       return {
         status: false,
         status_code: 500,
         message: error.message,
         data: {
-          registered_user: null,
+          getAll_checkout: null,
         },
       };
     }
   }
 
-  static async create({
-    UserId,
-    namaPeralatan,
-    kodePeralatan,
-    permasalahan,
-    email
-  }) {
+  static async getCheckoutById({ id }) {
     try {
-      const email = await User.findOne({
-        where: { email },
+      const getCheckoutById = await CheckoutRepository.getById({
+        id,
       });
-
-      const createdCheckout = await CheckoutRepository.create({
-        UserId,
-        email,
-        namaPeralatan,
-        kodePeralatan,
-        permasalahan,
-        otp: Math.floor(Math.random()*9999) 
-      });
-
-      await verifMail(email, createdCheckout);
 
       return {
         status: true,
-        status_code: 201,
-        message: "Post created successfully",
+        status_code: 200,
+        message: "Get By Id successfully",
         data: {
-          created_checkout: createdCheckout,
+          getCheckout_ById: getCheckoutById,
         },
       };
     } catch (error) {
-      console.log(error)
       return {
         status: false,
         status_code: 500,
         message: error.message,
         data: {
-          registered_user: null,
+          getCheckout_ById: null,
         },
       };
     }
   }
 
-  static async updateStatus({ otp, email }) {
+  static async updateCheckout({
+    id,
+    permasalahan,
+    tindakan,
+    gantiSparepart,
+    peralatanId,
+    userRequestId,
+    userApproveId,
+    userITid,
+    otp,
+  }) {
     try {
       // Melakukan check terhadap email
-      const Check = await CheckoutRepository.getByEmail({ email });
+      const Check = await CheckoutRepository.getById({ id });
 
-      // Jika emailnya tidak terdaftar, maka akan memberikan message "Email tidak terdaftar"
+      // Jika input Id salah, maka akan memberikan message "id salah"
       if (!Check) {
         return {
           status: false,
           status_code: 400,
-          message: "Email tidak terdaftar",
+          message: "Id Salah",
           data: {
             registered_user: null,
           },
         };
       }
 
-      // Jika emailnya ada, tetapi kode otp nya salah maka akan memberikan message "kode otp salah"
-      if (Check && Check.otp !== otp) {
-        return {
-          status: false,
-          status_code: 400,
-          message: "Kode otp salah",
-          data: {
-            registered_user: null,
-          },
-        };
-      }
+      const updateCheckout = await CheckoutRepository.updateCheckout({
+        id,
+        permasalahan,
+        tindakan,
+        gantiSparepart,
+        peralatanId,
+        userRequestId,
+        userApproveId,
+        userITid,
+        otp,
+      });
 
-      if (Check.otp == otp) {
-        const updatedCheckout = await CheckoutRepository.updateStatusWO({
-          email,
-          statusWO: "disetujui",
-        });
-
-        return {
-          status: true,
-          status_code: 200,
-          message: "Updated Status successfully",
-          data: {
-            updated_checkout: updatedCheckout,
-          },
-        };
-      }
+      return {
+        status: true,
+        status_code: 200,
+        message: "update departement successfully",
+        data: {
+          update_Checkout: updateCheckout,
+        },
+      };
     } catch (error) {
       return {
         status: false,
         status_code: 500,
         message: error.message,
         data: {
-          registered_user: null,
+          update_Checkout: null,
         },
       };
     }
   }
 
-  static async getCheckoutByID({ id }) {
+  static async deleteCheckout({ id }) {
     try {
-      const getCheckout = await CheckoutRepository.getCheckoutByID({
+      const deletedCheckout = await CheckoutRepository.deleteById({
         id,
       });
 
       return {
         status: true,
         status_code: 200,
-        message: "Success",
+        message: "delete departement successfully",
         data: {
-          checkout: getCheckout,
+          delete_Checkout: deletedCheckout,
         },
       };
     } catch (error) {
@@ -161,38 +192,11 @@ class CheckoutService {
         status_code: 500,
         message: error.message,
         data: {
-          registered_user: null,
+          delete_Checkout: null,
         },
       };
     }
   }
-
-  static async deleteByID({ id }) {
-    try {
-      const deletedCheckout = await CheckoutRepository.deleteByID({
-        id,
-      });
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "Deleted Successfully",
-        data: {
-          deleted_checkout: deletedCheckout,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          registered_user: null,
-        },
-      };
-    }
-  }
-
 }
 
 module.exports = CheckoutService;

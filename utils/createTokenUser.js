@@ -1,12 +1,12 @@
 const createTokenUser = (user) => {
   return {
+    id: user.userId,
     name: user.name,
     email: user.email,
-    picture: user.picture,
-    role: user.role,
-    position: user.position,
-    departement: user.departement,
-    id: user.userId,
+    posisi: user.posisi,
+    roles: user.roles,
+    DepartementId: user.DepartementId,
+    GroupId: user.GroupId,
   };
 };
 
