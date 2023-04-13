@@ -1,4 +1,4 @@
-const { Checkout } = require("../models");
+const { Checkout, User } = require("../models");
 
 class CheckoutRepository {
   static async create({
@@ -23,6 +23,24 @@ class CheckoutRepository {
     });
 
     return createCheckout;
+  }
+
+  static async getEmail({ userRequestId }) {
+    const userRecords = await User.findOne({
+      where: { id: userRequestId },
+      attributes: ['email']
+    });
+
+    return userRecords.email;
+  }
+
+  static async getUser({ userApproveId }) {
+    const userRecords = await User.findOne({
+      where: { id: userApproveId },
+      attributes: ['name']
+    });
+
+    return userRecords.name;
   }
 
   static async getById({ id }) {

@@ -1,8 +1,7 @@
 'use strict';
 const { hashPassword } = require("../helpers/bcrypt");
-const {
-  Model
-} = require('sequelize');
+const {Model} = require('sequelize');
+const {Checkout} = require("../models")
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -10,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
+    static associate() {
+     
     }
   }
   User.init({
