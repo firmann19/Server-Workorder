@@ -156,7 +156,7 @@ class AuthService {
           status_code: 400,
           message: "Email wajib diisi",
           data: {
-            registered_user: null,
+            user: null,
           },
         };
       }
@@ -167,7 +167,7 @@ class AuthService {
           status_code: 400,
           message: "Password wajib diisi",
           data: {
-            registered_user: null,
+            user: null,
           },
         };
       } else if (password.length < 8) {
@@ -176,7 +176,7 @@ class AuthService {
           status_code: 400,
           message: "Password minimal 8 karakter",
           data: {
-            registered_user: null,
+            user: null,
           },
         };
       }
@@ -227,7 +227,7 @@ class AuthService {
         status_code: 500,
         message: error.message,
         data: {
-          register_users: null,
+          user: null,
         },
       };
     }
