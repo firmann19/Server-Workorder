@@ -12,37 +12,31 @@ class CheckoutService {
     userITid,
   }) {
     try {
-      const getEmail = await CheckoutRepository.getEmail({ userRequestId });
+      const getEmail = await CheckoutRepository.getEmail({ userApproveId });
 
-      const getUser = await CheckoutRepository.getUser({userApproveId})
-  
-        const createdCheckout = await CheckoutRepository.create({
-          permasalahan,
-          tindakan,
-          gantiSparepart,
-          peralatanId,
-          userRequestId,
-          userApproveId,
-          userITid,
-          otp : Math.floor(Math.random() * 9999)
+      const createdCheckout = await CheckoutRepository.create({
+        permasalahan,
+        tindakan,
+        gantiSparepart,
+        peralatanId,
+        userRequestId,
+        userApproveId,
+        userITid,
+        otp: Math.floor(Math.random() * 9999),
+      });
+
+      await verifMail(getEmail, createdCheckout);
+
+      return {
+        status: true,
+        status_code: 201,
+        message: "Post created successfully",
+        data: {
+          created_checkout: createdCheckout,
         },
-        {
-          where: {departement_id : getUser.DepartementId }
-        });
-  
-        await verifMail(getEmail, createdCheckout);
-
-        return {
-          status: true,
-          status_code: 201,
-          message: "Post created successfully",
-          data: {
-            created_checkout: createdCheckout,
-          },
-      }
-      
+      };
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return {
         status: false,
         status_code: 500,

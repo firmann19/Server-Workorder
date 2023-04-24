@@ -25,11 +25,8 @@ class UserRepository {
 
   static async getByEmail({ email }) {
     const getUserByEmail = await User.findOne({
-      where: { email },
+      where: { email }
     });
-
-    
-
     return getUserByEmail;
   }
 
@@ -37,7 +34,6 @@ class UserRepository {
     const getUserById = await User.findOne({
       where: { id },
     });
-
     return getUserById;
   }
 
@@ -58,7 +54,8 @@ class UserRepository {
       roles,
       DepartementId,
       GroupId,
-    });
+    },
+    );
 
     return getAllUser;
   }
@@ -97,4 +94,4 @@ class UserRepository {
   }
 }
 
-module.exports = UserRepository
+module.exports = UserRepository;

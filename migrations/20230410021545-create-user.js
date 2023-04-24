@@ -22,8 +22,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       roles: {
-        type: Sequelize.ENUM,
-        values: ["admin", "user"],
+        type: Sequelize.STRING,
       },
       DepartementId:{
         type: Sequelize.INTEGER

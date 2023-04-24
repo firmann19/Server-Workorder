@@ -57,6 +57,44 @@ const getAll = async (req, res, next) => {
   });
 };
 
+const getAllUserByDepartementId = async (req, res, next) => {
+  const { DepartementId} =
+  req.body;
+  
+    const { status, status_code, message, data } =
+      await AuthService.getAllUserByDepartementId({
+        DepartementId,
+      });
+
+    res.status(status_code).send({
+      status: status,
+      message: message,
+      data: data,
+    });
+};
+
+const getAllApproved = async (req, res, next) => {
+  const { name, email, posisi, password, roles, DepartementId, GroupId } =
+    req.body;
+
+  const { status, status_code, message, data } =
+    await AuthService.getAllApprove({
+      name,
+      email,
+      posisi,
+      password,
+      roles,
+      DepartementId,
+      GroupId,
+    });
+
+  res.status(status_code).send({
+    status: status,
+    message: message,
+    data: data,
+  });
+};
+
 const getById = async (req, res, next) => {
   const { id } = req.params;
 
@@ -109,4 +147,13 @@ const deleteById = async (req, res, next) => {
   });
 };
 
-module.exports = { register, login, getAll, getById, update, deleteById };
+module.exports = {
+  register,
+  login,
+  getAll,
+  getById,
+  update,
+  deleteById,
+  getAllApproved,
+  getAllUserByDepartementId,
+};

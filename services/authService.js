@@ -1,6 +1,7 @@
 const UsersRepository = require("../repositories/usersRepository");
 const { createTokenUser, createJWT } = require("../utils");
 const { comparePassword } = require("../helpers/bcrypt");
+const {User, Departement} = require("../models");
 
 const SALT_ROUND = 10;
 
@@ -135,7 +136,6 @@ class AuthService {
         };
       }
     } catch (error) {
-      console.log(error)
       return {
         status: false,
         status_code: 500,
@@ -202,10 +202,7 @@ class AuthService {
           },
         };
       } else {
-        const isPasswordMatch = comparePassword(
-          password,
-          getUser.password
-        );
+        const isPasswordMatch = comparePassword(password, getUser.password);
 
         if (isPasswordMatch) {
           const token = createJWT({ payload: createTokenUser(getUser) });
@@ -216,12 +213,14 @@ class AuthService {
             message: "User berhasil login",
             data: {
               token,
+              user: getUser.name,
+              email: getUser.email,
             },
           };
-        } 
+        }
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
       return {
         status: false,
         status_code: 500,
@@ -233,24 +232,13 @@ class AuthService {
     }
   }
 
-  static async getAll({
-    name,
-    email,
-    posisi,
-    roles,
-    password,
-    DepartementId,
-    GroupId,
-  }) {
+  static async getAll() {
     try {
-      const getAllUsers = await UsersRepository.getAllUser({
-        name,
-        email,
-        posisi,
-        roles,
-        password,
-        DepartementId,
-        GroupId,
+      const getAllUsers = await User.findAll({
+        include:[{
+          model: Departement,
+          attributes: ["nama"]
+        }]
       });
 
       return {
@@ -262,6 +250,7 @@ class AuthService {
         },
       };
     } catch (error) {
+      console.log(error);
       return {
         status: false,
         status_code: 500,
@@ -343,7 +332,6 @@ class AuthService {
         },
       };
     } catch (error) {
-      console.log(error)
       return {
         status: false,
         status_code: 500,

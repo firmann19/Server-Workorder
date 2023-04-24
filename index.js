@@ -24,65 +24,178 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "/public")));
 
 //Checkout
-app.post("/api/v1/checkout", checkoutController.create);
+app.post(
+  "/api/v1/checkout",
+  authenticateUser,
+  checkoutController.create
+);
 
-app.get("/api/v1/checkout", checkoutController.getAll);
+app.get(
+  "/api/v1/checkout",
+  authenticateUser,
+  authorizeRoles,
+  checkoutController.getAll
+);
 
-app.get("/api/v1/checkout/:id", checkoutController.getById);
+app.get(
+  "/api/v1/checkout/:id",
+  authenticateUser,
+  authorizeRoles,
+  checkoutController.getById
+);
 
-app.put("/api/v1/checkout/:id", checkoutController.update);
+app.put(
+  "/api/v1/checkout/:id",
+  authenticateUser,
+  authorizeRoles,
+  checkoutController.update
+);
 
-app.delete("/api/v1/checkout/:id", checkoutController.deleteById);
+app.delete(
+  "/api/v1/checkout/:id",
+  authenticateUser,
+  authorizeRoles,
+  checkoutController.deleteById
+);
 
 //User
 app.post("/api/v1/auth/signin", authController.login);
 
 app.post("/api/v1/auth/signup", authController.register);
 
-app.get("/api/v1/user", authController.getAll);
+app.get("/api/v1/user", authenticateUser, authController.getAll);
 
-app.get("/api/v1/user/:id", authController.getById);
+app.get("/api/v1/check-user", authenticateUser, authController.getAllUserByDepartementId);
 
-app.put("/api/v1/user/:id", authController.update);
+app.get("/api/v1/userApproved", authenticateUser, authController.getAllApproved)
 
-app.delete("/api/v1/user/:id", authController.deleteById);
+app.get("/api/v1/user/:id", authenticateUser, authController.getById);
+
+app.put(
+  "/api/v1/user/:id",
+  authenticateUser,
+  authorizeRoles,
+  authController.update
+);
+
+app.delete(
+  "/api/v1/user/:id",
+  authenticateUser,
+  authorizeRoles,
+  authController.deleteById
+);
 
 //Departement
-app.post("/api/v1/departement", departementController.create);
+app.post(
+  "/api/v1/departement",
+  authenticateUser,
+  authorizeRoles,
+  departementController.create
+);
 
-app.get("/api/v1/departement", departementController.getAll);
+app.get(
+  "/api/v1/departement",
+  authenticateUser,
+  authorizeRoles,
+  departementController.getAll
+);
 
-app.get("/api/v1/departement/:id", departementController.getById);
+app.get(
+  "/api/v1/departement/:id",
+  authenticateUser,
+  authorizeRoles,
+  departementController.getById
+);
 
-app.put("/api/v1/departement/:id", departementController.update);
+app.put(
+  "/api/v1/departement/:id",
+  authenticateUser,
+  authorizeRoles,
+  departementController.update
+);
 
-app.delete("/api/v1/departement/:id", departementController.deleteById);
+app.delete(
+  "/api/v1/departement/:id",
+  authenticateUser,
+  authorizeRoles,
+  departementController.deleteById
+);
 
 //Group
-app.post("/api/v1/group", groupController.create);
+app.post(
+  "/api/v1/group",
+  authenticateUser,
+  authorizeRoles,
+  groupController.create
+);
 
-app.get("/api/v1/group", groupController.getAll);
+app.get(
+  "/api/v1/group",
+  authenticateUser,
+  authorizeRoles,
+  groupController.getAll
+);
 
-app.get("/api/v1/group/:id", groupController.getById);
+app.get(
+  "/api/v1/group/:id",
+  authenticateUser,
+  authorizeRoles,
+  groupController.getById
+);
 
-app.put("/api/v1/group/:id", groupController.update);
+app.put(
+  "/api/v1/group/:id",
+  authenticateUser,
+  authorizeRoles,
+  groupController.update
+);
 
-app.delete("/api/v1/group/:id", groupController.deleteById);
+app.delete(
+  "/api/v1/group/:id",
+  authenticateUser,
+  authorizeRoles,
+  groupController.deleteById
+);
 
 //Peralatan
-app.post("/api/v1/peralatan", peralatanController.create);
+app.post(
+  "/api/v1/peralatan",
+  authenticateUser,
+  authorizeRoles,
+  peralatanController.create
+);
 
-app.get("/api/v1/peralatan", peralatanController.getAll);
+app.get(
+  "/api/v1/peralatan",
+  authenticateUser,
+  authorizeRoles,
+  peralatanController.getAll
+);
 
-app.get("/api/v1/peralatan/:id", peralatanController.getById);
+app.get(
+  "/api/v1/peralatan/:id",
+  authenticateUser,
+  authorizeRoles,
+  peralatanController.getById
+);
 
-app.put("/api/v1/peralatan/:id", peralatanController.update);
+app.put(
+  "/api/v1/peralatan/:id",
+  authenticateUser,
+  authorizeRoles,
+  peralatanController.update
+);
 
-app.delete("/api/v1/peralatan/:id", peralatanController.deleteById) /
-  // Public File Access
+app.delete(
+  "/api/v1/peralatan/:id",
+  authenticateUser,
+  authorizeRoles,
+  peralatanController.deleteById
+);
+// Public File Access
 
-  app.listen(port, () => {
-    console.log(`Server berhasil berjalan di port http://localhost:${port}`);
-  });
+app.listen(port, () => {
+  console.log(`Server berhasil berjalan di port http://localhost:${port}`);
+});
 
 module.exports = app;

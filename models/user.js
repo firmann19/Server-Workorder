@@ -1,7 +1,6 @@
 'use strict';
 const { hashPassword } = require("../helpers/bcrypt");
 const {Model} = require('sequelize');
-const {Checkout} = require("../models")
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -9,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate() {
-     
+    static associate(models) {
+      this.belongsTo(models.Departement)
     }
   }
   User.init({
@@ -18,12 +17,9 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     posisi: DataTypes.STRING,
-    roles: {
-      type: DataTypes.ENUM,
-      values: ["admin", "user"]
-    },
+    roles: DataTypes.STRING,
     DepartementId: DataTypes.INTEGER,
-    GroupId: DataTypes.INTEGER 
+    GroupId: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'User',
