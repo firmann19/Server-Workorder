@@ -147,7 +147,7 @@ class AuthService {
     }
   }
 
-  static async login({ email, password }) {
+  static async login({ email, password}) {
     try {
       // Payload Validation
       if (!email) {
@@ -182,6 +182,7 @@ class AuthService {
       }
 
       const getUser = await UsersRepository.getByEmail({ email });
+      console.log(getUser)
 
       if (!getUser) {
         return {
@@ -215,6 +216,8 @@ class AuthService {
               token,
               user: getUser.name,
               email: getUser.email,
+              departement: getUser.Departement.nama
+              //masukan departementId terhadap user yang login untuk filter list user
             },
           };
         }
@@ -235,6 +238,7 @@ class AuthService {
   static async getAll() {
     try {
       const getAllUsers = await User.findAll({
+       // where: {DepartementId: DepartementByuser},
         include:[{
           model: Departement,
           attributes: ["nama"]

@@ -22,11 +22,12 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, DepartementId } = req.body;
 
   const { status, status_code, message, data } = await AuthService.login({
     email,
     password,
+    DepartementId
   });
 
   res.status(status_code).send({

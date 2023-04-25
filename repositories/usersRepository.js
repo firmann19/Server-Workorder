@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, Departement } = require("../models");
 
 class UserRepository {
   static async create({
@@ -25,7 +25,12 @@ class UserRepository {
 
   static async getByEmail({ email }) {
     const getUserByEmail = await User.findOne({
-      where: { email }
+      where: { email },
+
+        include: [{
+          model: Departement,
+          attribubtes: ["nama", "id"]
+        }]
     });
     return getUserByEmail;
   }
