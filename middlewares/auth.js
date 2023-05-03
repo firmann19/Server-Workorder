@@ -19,6 +19,7 @@ const authenticateUser = async (req, res, next) => {
     }
 
     const payload = isTokenValid({ token });
+    console.log(payload)
 
     // Attach the user and his permissions to the req object
     req.user = {

@@ -2,24 +2,24 @@ const CheckoutService = require("../services/checkoutService");
 
 const create = async (req, res, next) => {
   const {
+    namaBarang,
+    kodeBarang,
     permasalahan,
     tindakan,
     gantiSparepart,
-    peralatanId,
-    userRequestId,
-    userApproveId,
-    userITid,
+    UserRequestId,
+    UserApproveId,
     otp,
   } = req.body;
 
   const { status, status_code, message, data } = await CheckoutService.create({
+    namaBarang,
+    kodeBarang,
     permasalahan,
     tindakan,
     gantiSparepart,
-    peralatanId,
-    userRequestId,
-    userApproveId,
-    userITid,
+    UserRequestId,
+    UserApproveId,
     otp,
   });
 
@@ -32,24 +32,24 @@ const create = async (req, res, next) => {
 
 const getAll = async (req, res, next) => {
   const {
+    namaBarang,
+    kodeBarang,
     permasalahan,
     tindakan,
     gantiSparepart,
-    peralatanId,
-    userRequestId,
-    userApproveId,
-    userITid,
+    UserRequestId,
+    UserApproveId,
     otp,
   } = req.body;
 
   const { status, status_code, message, data } = await CheckoutService.getAll({
+    namaBarang,
+    kodeBarang,
     permasalahan,
     tindakan,
     gantiSparepart,
-    peralatanId,
-    userRequestId,
-    userApproveId,
-    userITid,
+    UserRequestId,
+    UserApproveId,
     otp,
   });
 
@@ -79,25 +79,27 @@ const update = async (req, res, next) => {
   const { id } = req.params;
 
   const {
+    namaBarang,
+    kodeBarang,
     permasalahan,
     tindakan,
     gantiSparepart,
-    peralatanId,
-    userRequestId,
-    userApproveId,
-    userITid,
+    UserRequestId,
+    UserApproveId,
+    otp,
   } = req.body;
 
   const { status, status_code, message, data } =
     await CheckoutService.updateCheckout({
       id,
+      namaBarang,
+      kodeBarang,
       permasalahan,
       tindakan,
       gantiSparepart,
-      peralatanId,
-      userRequestId,
-      userApproveId,
-      userITid,
+      UserRequestId,
+      UserApproveId,
+      otp,
     });
 
   res.status(status_code).send({

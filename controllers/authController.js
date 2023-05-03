@@ -27,8 +27,32 @@ const login = async (req, res) => {
   const { status, status_code, message, data } = await AuthService.login({
     email,
     password,
-    DepartementId
+    DepartementId,
   });
+
+  res.status(status_code).send({
+    status: status,
+    message: message,
+    data: data,
+  });
+};
+
+const getAllApprove = async (req, res, next) => {
+  const { name, email, posisi, password, roles, DepartementId, GroupId } =
+    req.user;
+
+  console.log(req.user);
+
+  const { status, status_code, message, data } =
+    await AuthService.getAllApproveUsers({
+      name,
+      email,
+      posisi,
+      password,
+      roles,
+      DepartementId,
+      GroupId,
+    });
 
   res.status(status_code).send({
     status: status,
@@ -50,44 +74,6 @@ const getAll = async (req, res, next) => {
     DepartementId,
     GroupId,
   });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
-};
-
-const getAllUserByDepartementId = async (req, res, next) => {
-  const { DepartementId} =
-  req.body;
-  
-    const { status, status_code, message, data } =
-      await AuthService.getAllUserByDepartementId({
-        DepartementId,
-      });
-
-    res.status(status_code).send({
-      status: status,
-      message: message,
-      data: data,
-    });
-};
-
-const getAllApproved = async (req, res, next) => {
-  const { name, email, posisi, password, roles, DepartementId, GroupId } =
-    req.body;
-
-  const { status, status_code, message, data } =
-    await AuthService.getAllApprove({
-      name,
-      email,
-      posisi,
-      password,
-      roles,
-      DepartementId,
-      GroupId,
-    });
 
   res.status(status_code).send({
     status: status,
@@ -155,6 +141,5 @@ module.exports = {
   getById,
   update,
   deleteById,
-  getAllApproved,
-  getAllUserByDepartementId,
+  getAllApprove,
 };

@@ -2,33 +2,33 @@ const { Checkout, User } = require("../models");
 
 class CheckoutRepository {
   static async create({
+    namaBarang,
+    kodeBarang,
     permasalahan,
     tindakan,
     gantiSparepart,
-    peralatanId,
-    userRequestId,
-    userApproveId,
-    userITid,
-    otp
+    UserRequestId,
+    UserApproveId,
+    otp,
   }) {
     const createCheckout = Checkout.create({
+      namaBarang,
+      kodeBarang,
       permasalahan,
       tindakan,
       gantiSparepart,
-      peralatanId,
-      userRequestId,
-      userApproveId,
-      userITid,
-      otp
+      UserRequestId,
+      UserApproveId,
+      otp,
     });
 
     return createCheckout;
   }
 
-  static async getEmail({ userApproveId }) {
+  static async getEmail({ UserApproveId }) {
     const userRecords = await User.findOne({
-      where: { id: userApproveId },
-      attributes: ['email']
+      where: { id: UserApproveId },
+      attributes: ["email"],
     });
 
     return userRecords.email;
@@ -43,23 +43,23 @@ class CheckoutRepository {
   }
 
   static async getAllCheckout({
+    namaBarang,
+    kodeBarang,
     permasalahan,
     tindakan,
     gantiSparepart,
-    peralatanId,
-    userRequestId,
-    userApproveId,
-    userITid,
+    UserRequestId,
+    UserApproveId,
     otp,
   }) {
     const getAllCheckout = Checkout.findAll({
+      namaBarang,
+      kodeBarang,
       permasalahan,
       tindakan,
       gantiSparepart,
-      peralatanId,
-      userRequestId,
-      userApproveId,
-      userITid,
+      UserRequestId,
+      UserApproveId,
       otp,
     });
 
@@ -68,23 +68,25 @@ class CheckoutRepository {
 
   static async updateCheckout({
     id,
+    namaBarang,
+    kodeBarang,
     permasalahan,
     tindakan,
     gantiSparepart,
-    peralatanId,
-    userRequestId,
-    userApproveId,
-    userITid,
+    UserRequestId,
+    UserApproveId,
+    otp,
   }) {
     const updateCheckout = Checkout.update(
       {
+        namaBarang,
+        kodeBarang,
         permasalahan,
         tindakan,
         gantiSparepart,
-        peralatanId,
-        userRequestId,
-        userApproveId,
-        userITid,
+        UserRequestId,
+        UserApproveId,
+        otp,
       },
       { where: { id } }
     );

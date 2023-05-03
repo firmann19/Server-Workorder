@@ -1,7 +1,7 @@
 const UsersRepository = require("../repositories/usersRepository");
 const { createTokenUser, createJWT } = require("../utils");
 const { comparePassword } = require("../helpers/bcrypt");
-const {User, Departement} = require("../models");
+const { User, Departement, Group } = require("../models");
 
 const SALT_ROUND = 10;
 
@@ -136,6 +136,7 @@ class AuthService {
         };
       }
     } catch (error) {
+      console.log(error);
       return {
         status: false,
         status_code: 500,
@@ -147,7 +148,7 @@ class AuthService {
     }
   }
 
-  static async login({ email, password}) {
+  static async login({ email, password }) {
     try {
       // Payload Validation
       if (!email) {
@@ -182,7 +183,6 @@ class AuthService {
       }
 
       const getUser = await UsersRepository.getByEmail({ email });
-      console.log(getUser)
 
       if (!getUser) {
         return {
@@ -216,14 +216,14 @@ class AuthService {
               token,
               user: getUser.name,
               email: getUser.email,
-              departement: getUser.Departement.nama
-              //masukan departementId terhadap user yang login untuk filter list user
+              departement: getUser.Departement.nama,
+              departementId: getUser.DepartementId,
             },
           };
         }
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return {
         status: false,
         status_code: 500,
@@ -235,14 +235,24 @@ class AuthService {
     }
   }
 
-  static async getAll() {
+  static async getAll({
+    name,
+    email,
+    password,
+    posisi,
+    roles,
+    DepartementId,
+    GroupId,
+  }) {
     try {
       const getAllUsers = await User.findAll({
-       // where: {DepartementId: DepartementByuser},
-        include:[{
-          model: Departement,
-          attributes: ["nama"]
-        }]
+        name,
+        email,
+        password,
+        posisi,
+        roles,
+        DepartementId,
+        GroupId,
       });
 
       return {
@@ -261,6 +271,38 @@ class AuthService {
         message: error.message,
         data: {
           getAll_users: null,
+        },
+      };
+    }
+  }
+
+  static async getAllApproveUsers({ DepartementId }) {
+    try {
+      const getAllApproveUsers = await User.findAll({
+        where: { DepartementId },
+        include: [
+          {
+            model: Departement,
+            attributes: ["nama", "id"],
+          },
+        ],
+      });
+
+      return {
+        status: true,
+        status_code: 200,
+        message: "Get All successfully",
+        data: {
+          getAllApprove_users: getAllApproveUsers,
+        },
+      };
+    } catch (error) {
+      return {
+        status: false,
+        status_code: 500,
+        message: error.message,
+        data: {
+          getAllApprove_users: null,
         },
       };
     }
@@ -356,7 +398,7 @@ class AuthService {
       return {
         status: true,
         status_code: 200,
-        message: "delete departement successfully",
+        message: "delete user successfully",
         data: {
           delete_User: deletedUser,
         },

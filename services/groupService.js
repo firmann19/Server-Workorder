@@ -10,7 +10,7 @@ class DepartementService {
       return {
         status: true,
         status_code: 201,
-        message: "Post created successfully",
+        message: "created group successfully",
         data: {
           created_group: createdGroup,
         },
@@ -130,7 +130,7 @@ class DepartementService {
       return {
         status: true,
         status_code: 200,
-        message: "delete departement successfully",
+        message: "delete group successfully",
         data: {
           delete_Group: deletedGroup,
         },

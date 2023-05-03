@@ -11,7 +11,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsTo(models.Departement, {
         foreignKey: "DepartementId"
-      })
+      }),
+      this.belongsTo(models.Group, {
+        foreignKey: "GroupId"
+      })      
     }
   }
   User.init({

@@ -1,6 +1,5 @@
 "use strict";
 const { Model } = require("sequelize");
-const { User } = require("../models");
 module.exports = (sequelize, DataTypes) => {
   class Checkout extends Model {
     /**
@@ -8,47 +7,20 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate() {}
+    static associate(models) {
+      // define association here
+    }
   }
   Checkout.init(
     {
+      UserRequestId: DataTypes.INTEGER,
+      namaBarang: DataTypes.STRING,
+      kodeBarang: DataTypes.STRING,
       permasalahan: DataTypes.STRING,
-      tindakan: DataTypes.STRING,
-      gantisparepart: DataTypes.STRING,
+      UserApproveId: DataTypes.INTEGER,
       otp: DataTypes.STRING,
-      verifikasi: {
-        type: DataTypes.ENUM,
-        values: ["belum verifikasi", "sudah verifikasi"],
-        defaultValue: "belum verifikasi"
-      },
-      userApproveId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-      },
-      userRequestId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-      },
-      userITid: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-      },
-      peralatanId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: "Peralatans",
-          key: "id",
-        },
-      },
+      tindakan: DataTypes.STRING,
+      gantiSparepart: DataTypes.STRING,
     },
     {
       sequelize,

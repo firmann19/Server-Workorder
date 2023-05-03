@@ -10,7 +10,7 @@ class DepartementService {
       return {
         status: true,
         status_code: 201,
-        message: "Post created successfully",
+        message: "create Departement successfully",
         data: {
           created_departement: createdDepartement,
         },
@@ -42,6 +42,7 @@ class DepartementService {
         },
       };
     } catch (error) {
+      console.log(error)
       return {
         status: false,
         status_code: 500,

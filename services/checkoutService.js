@@ -3,25 +3,25 @@ const { verifMail } = require("./mail");
 
 class CheckoutService {
   static async create({
+    namaBarang,
+    kodeBarang,
     permasalahan,
     tindakan,
     gantiSparepart,
-    peralatanId,
-    userRequestId,
-    userApproveId,
-    userITid,
+    UserRequestId,
+    UserApproveId,
   }) {
     try {
-      const getEmail = await CheckoutRepository.getEmail({ userApproveId });
+      const getEmail = await CheckoutRepository.getEmail({ UserApproveId });
 
       const createdCheckout = await CheckoutRepository.create({
+        namaBarang,
+        kodeBarang,
         permasalahan,
         tindakan,
         gantiSparepart,
-        peralatanId,
-        userRequestId,
-        userApproveId,
-        userITid,
+        UserRequestId,
+        UserApproveId,
         otp: Math.floor(Math.random() * 9999),
       });
 
@@ -49,24 +49,24 @@ class CheckoutService {
   }
 
   static async getAll({
+    namaBarang,
+    kodeBarang,
     permasalahan,
     tindakan,
     gantiSparepart,
-    peralatanId,
-    userRequestId,
-    userApproveId,
-    userITid,
+    UserRequestId,
+    UserApproveId,
     otp,
   }) {
     try {
       const getAllCheckout = await CheckoutRepository.getAllCheckout({
+        namaBarang,
+        kodeBarang,
         permasalahan,
         tindakan,
         gantiSparepart,
-        peralatanId,
-        userRequestId,
-        userApproveId,
-        userITid,
+        UserRequestId,
+        UserApproveId,
         otp,
       });
 
@@ -118,13 +118,13 @@ class CheckoutService {
 
   static async updateCheckout({
     id,
+    namaBarang,
+    kodeBarang,
     permasalahan,
     tindakan,
     gantiSparepart,
-    peralatanId,
-    userRequestId,
-    userApproveId,
-    userITid,
+    UserRequestId,
+    UserApproveId,
     otp,
   }) {
     try {
@@ -145,13 +145,13 @@ class CheckoutService {
 
       const updateCheckout = await CheckoutRepository.updateCheckout({
         id,
+        namaBarang,
+        kodeBarang,
         permasalahan,
         tindakan,
         gantiSparepart,
-        peralatanId,
-        userRequestId,
-        userApproveId,
-        userITid,
+        UserRequestId,
+        UserApproveId,
         otp,
       });
 

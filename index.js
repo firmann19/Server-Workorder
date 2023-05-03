@@ -24,11 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "/public")));
 
 //Checkout
-app.post(
-  "/api/v1/checkout",
-  authenticateUser,
-  checkoutController.create
-);
+app.post("/api/v1/checkout", authenticateUser, checkoutController.create);
 
 app.get(
   "/api/v1/checkout",
@@ -65,9 +61,11 @@ app.post("/api/v1/auth/signup", authController.register);
 
 app.get("/api/v1/user", authenticateUser, authController.getAll);
 
-app.get("/api/v1/check-user", authenticateUser, authController.getAllUserByDepartementId);
-
-app.get("/api/v1/userApproved", authenticateUser, authController.getAllApproved)
+app.get(
+  "/api/v1/getAllApprove",
+  authenticateUser,
+  authController.getAllApprove
+);
 
 app.get("/api/v1/user/:id", authenticateUser, authController.getById);
 
