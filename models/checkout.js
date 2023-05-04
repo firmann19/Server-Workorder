@@ -18,9 +18,14 @@ module.exports = (sequelize, DataTypes) => {
       kodeBarang: DataTypes.STRING,
       permasalahan: DataTypes.STRING,
       UserApproveId: DataTypes.INTEGER,
+      StatusWO: {
+        type: DataTypes.STRING,
+        defaultValue: "Pending" 
+      },
       otp: DataTypes.STRING,
       tindakan: DataTypes.STRING,
       gantiSparepart: DataTypes.STRING,
+      UserITid: DataTypes.INTEGER,
     },
     {
       sequelize,

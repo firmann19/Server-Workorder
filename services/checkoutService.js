@@ -10,6 +10,7 @@ class CheckoutService {
     gantiSparepart,
     UserRequestId,
     UserApproveId,
+    StatusWO,
   }) {
     try {
       const getEmail = await CheckoutRepository.getEmail({ UserApproveId });
@@ -22,6 +23,7 @@ class CheckoutService {
         gantiSparepart,
         UserRequestId,
         UserApproveId,
+        StatusWO,
         otp: Math.floor(Math.random() * 9999),
       });
 
@@ -56,6 +58,7 @@ class CheckoutService {
     gantiSparepart,
     UserRequestId,
     UserApproveId,
+    StatusWO,
     otp,
   }) {
     try {
@@ -67,6 +70,7 @@ class CheckoutService {
         gantiSparepart,
         UserRequestId,
         UserApproveId,
+        StatusWO,
         otp,
       });
 
@@ -125,6 +129,7 @@ class CheckoutService {
     gantiSparepart,
     UserRequestId,
     UserApproveId,
+    StatusWO,
     otp,
   }) {
     try {
@@ -152,6 +157,7 @@ class CheckoutService {
         gantiSparepart,
         UserRequestId,
         UserApproveId,
+        StatusWO,
         otp,
       });
 
@@ -196,6 +202,33 @@ class CheckoutService {
         message: error.message,
         data: {
           delete_Checkout: null,
+        },
+      };
+    }
+  }
+
+  static async changeStatusWO({ id, StatusWO }) {
+    try {
+      const statusWO = await CheckoutRepository.statusWorkOrder({
+        id,
+        StatusWO,
+      });
+
+      return {
+        status: true,
+        status_code: 200,
+        message: "status Work Order successfully",
+        data: {
+          status_WO: statusWO,
+        },
+      };
+    } catch (error) {
+      return {
+        status: false,
+        status_code: 500,
+        message: error.message,
+        data: {
+          statusWO: null,
         },
       };
     }

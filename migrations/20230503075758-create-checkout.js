@@ -9,6 +9,15 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      UserRequestId:{
+        type: Sequelize.INTEGER
+      },
+      UserApproveId:{
+        type: Sequelize.INTEGER
+      },
+      UserITid:{
+        type: Sequelize.INTEGER
+      },
       namaBarang: {
         type: Sequelize.STRING
       },
@@ -19,6 +28,9 @@ module.exports = {
         type: Sequelize.STRING
       },
       tindakan: {
+        type: Sequelize.STRING
+      },
+      StatusWO: {
         type: Sequelize.STRING
       },
       otp: {

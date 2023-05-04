@@ -9,6 +9,7 @@ class CheckoutRepository {
     gantiSparepart,
     UserRequestId,
     UserApproveId,
+    StatusWO,
     otp,
   }) {
     const createCheckout = Checkout.create({
@@ -19,6 +20,7 @@ class CheckoutRepository {
       gantiSparepart,
       UserRequestId,
       UserApproveId,
+      StatusWO,
       otp,
     });
 
@@ -50,6 +52,7 @@ class CheckoutRepository {
     gantiSparepart,
     UserRequestId,
     UserApproveId,
+    StatusWO,
     otp,
   }) {
     const getAllCheckout = Checkout.findAll({
@@ -60,6 +63,7 @@ class CheckoutRepository {
       gantiSparepart,
       UserRequestId,
       UserApproveId,
+      StatusWO,
       otp,
     });
 
@@ -75,6 +79,7 @@ class CheckoutRepository {
     gantiSparepart,
     UserRequestId,
     UserApproveId,
+    StatusWO,
     otp,
   }) {
     const updateCheckout = Checkout.update(
@@ -86,6 +91,7 @@ class CheckoutRepository {
         gantiSparepart,
         UserRequestId,
         UserApproveId,
+        StatusWO,
         otp,
       },
       { where: { id } }
@@ -99,6 +105,16 @@ class CheckoutRepository {
     });
 
     return deletedCheckout;
+  }
+
+  static async statusWorkOrder({ id, StatusWO }) {
+    const statusWO = await Checkout.update({
+      StatusWO
+    },{
+      where: { id },
+    });
+
+    return statusWO;
   }
 }
 

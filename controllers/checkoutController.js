@@ -9,6 +9,7 @@ const create = async (req, res, next) => {
     gantiSparepart,
     UserRequestId,
     UserApproveId,
+    StatusWO,
     otp,
   } = req.body;
 
@@ -20,6 +21,7 @@ const create = async (req, res, next) => {
     gantiSparepart,
     UserRequestId,
     UserApproveId,
+    StatusWO,
     otp,
   });
 
@@ -39,6 +41,7 @@ const getAll = async (req, res, next) => {
     gantiSparepart,
     UserRequestId,
     UserApproveId,
+    StatusWO,
     otp,
   } = req.body;
 
@@ -50,6 +53,7 @@ const getAll = async (req, res, next) => {
     gantiSparepart,
     UserRequestId,
     UserApproveId,
+    StatusWO,
     otp,
   });
 
@@ -86,6 +90,7 @@ const update = async (req, res, next) => {
     gantiSparepart,
     UserRequestId,
     UserApproveId,
+    StatusWO,
     otp,
   } = req.body;
 
@@ -99,6 +104,7 @@ const update = async (req, res, next) => {
       gantiSparepart,
       UserRequestId,
       UserApproveId,
+      StatusWO,
       otp,
     });
 
@@ -124,4 +130,22 @@ const deleteById = async (req, res, next) => {
   });
 };
 
-module.exports = { create, getAll, getById, update, deleteById };
+const statusWO = async (req, res, next) => {
+  const { id } = req.params;
+  const { StatusWO } = req.body;
+
+  const { status, status_code, message, data } = await CheckoutService.changeStatusWO(
+    {
+      id,
+      StatusWO,
+    }
+  );
+
+  res.status(status_code).send({
+    status: status,
+    message: message,
+    data: data,
+  });
+};
+
+module.exports = { create, getAll, getById, update, statusWO, deleteById };

@@ -54,6 +54,13 @@ app.delete(
   checkoutController.deleteById
 );
 
+app.put(
+  "/api/v1/statusWO/:id",
+  authenticateUser,
+  authorizeRoles,
+  checkoutController.statusWO
+);
+
 //User
 app.post("/api/v1/auth/signin", authController.login);
 
