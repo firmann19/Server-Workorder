@@ -8,20 +8,24 @@ class CheckoutRepository {
     tindakan,
     gantiSparepart,
     UserRequestId,
+    DepartUserId,
     UserApproveId,
     StatusWO,
     otp,
+    date_requestWO,
   }) {
     const createCheckout = Checkout.create({
+      UserRequestId,
+      DepartUserId,
       namaBarang,
       kodeBarang,
       permasalahan,
       tindakan,
       gantiSparepart,
-      UserRequestId,
       UserApproveId,
       StatusWO,
       otp,
+      date_requestWO,
     });
 
     return createCheckout;
@@ -72,27 +76,19 @@ class CheckoutRepository {
 
   static async updateCheckout({
     id,
-    namaBarang,
-    kodeBarang,
-    permasalahan,
     tindakan,
     gantiSparepart,
-    UserRequestId,
-    UserApproveId,
-    StatusWO,
-    otp,
+    UserIT,
+    HeadITid,
+    date_completionWO,
   }) {
     const updateCheckout = Checkout.update(
       {
-        namaBarang,
-        kodeBarang,
-        permasalahan,
         tindakan,
         gantiSparepart,
-        UserRequestId,
-        UserApproveId,
-        StatusWO,
-        otp,
+        UserIT,
+        HeadITid,
+        date_completionWO,
       },
       { where: { id } }
     );
@@ -108,13 +104,37 @@ class CheckoutRepository {
   }
 
   static async statusWorkOrder({ id, StatusWO }) {
-    const statusWO = await Checkout.update({
-      StatusWO
-    },{
-      where: { id },
-    });
+    const statusWO = await Checkout.update(
+      {
+        StatusWO,
+      },
+      {
+        where: { id },
+      }
+    );
 
     return statusWO;
+  }
+
+  static async statusPengerjaan({ id, StatusPengerjaan }) {
+    const statusPengerjaan = await Checkout.update(
+      {
+        StatusPengerjaan,
+      },
+      {
+        where: { id },
+      }
+    );
+    return statusPengerjaan;
+  }
+
+  static async getEmailHeadIT({ HeadITid }) {
+    const userRecords = await User.findOne({
+      where: { id: HeadITid },
+      attributes: ["email"],
+    });
+
+    return userRecords.email;
   }
 }
 

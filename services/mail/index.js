@@ -30,4 +30,21 @@ const verifMail = async (getEmail, data) => {
   }
 };
 
-module.exports = { verifMail };
+const DiketahuiWO = async (getEmail, data) => {
+  try {
+    let template = fs.readFileSync("views/email/VerifikasiHeadIT.html", "utf8");
+
+    let message = {
+      from: "'WorkOrder HTA' <no-reply@gmail.com>",
+      to: getEmail,
+      subject: "Confirmation Pengerjaan Work Order",
+      html: Mustache.render(template, data),
+    };
+
+    return await transporter.sendMail(message);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { verifMail, DiketahuiWO };

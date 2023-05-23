@@ -1,4 +1,4 @@
-const { ROLES } = require("../helpers/const");
+const UnauthorizedError = require("../helpers/unauthorized");
 const { isTokenValid } = require("../utils/jwt");
 
 const authenticateUser = async (req, res, next) => {
@@ -39,16 +39,14 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
-const authorizeRoles = (req, res, next) => {
-   const user = req.user;
 
-   if(user.roles === ROLES.ADMIN) return next();
-
-   return res.status(401).send({
-    status: false,
-    message: "Akun anda harus admin untuk mengakses resource ini.",
-    data: null
-   })
+const authorizeRoles = (...rolesUser) => {
+  return (req, res, next) => {
+    if (!rolesUser.includes(req.user.roles)) {
+      throw new UnauthorizedError("Unauthorized to access this route");
+    }
+    next();
+  };
 };
 
 module.exports = { authenticateUser, authorizeRoles };

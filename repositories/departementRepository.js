@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { Departement } = require("../models");
 
 class DepartementRepository {
@@ -17,9 +18,9 @@ class DepartementRepository {
     return getDepartementById;
   }
 
-  static async getAllDepartement({ nama }) {
+  static async getAllDepartement() {
     const getAllDepartement = Departement.findAll({
-      nama,
+        [Op.eq] : null
     });
 
     return getAllDepartement;

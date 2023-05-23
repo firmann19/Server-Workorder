@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 const { hashPassword } = require("../helpers/bcrypt");
-const {Model} = require('sequelize');
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -10,30 +10,36 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.belongsTo(models.Departement, {
-        foreignKey: "DepartementId"
+        foreignKey: "DepartementId",
       }),
-      this.belongsTo(models.Group, {
-        foreignKey: "GroupId"
-      })      
+        this.belongsTo(models.Group, {
+          foreignKey: "GroupId",
+        });
     }
   }
-  User.init({
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-    posisi: DataTypes.STRING,
-    DepartementId: DataTypes.INTEGER,
-    GroupId: DataTypes.INTEGER,
-    roles: DataTypes.STRING,
-  }, {
-    sequelize,
-    modelName: 'User',
-    hooks: {
-      beforeCreate: (user, opt) => {
-        user.password = hashPassword(user.password);
+  User.init(
+    {
+      name: DataTypes.STRING,
+      email: DataTypes.STRING,
+      password: DataTypes.STRING,
+      posisi: DataTypes.STRING,
+      DepartementId: DataTypes.INTEGER,
+      GroupId: DataTypes.INTEGER,
+      roles: {
+        type: DataTypes.STRING,
+        values: ["User", "Staff IT", "Manager IT"],
+        defaultValue: "User",
       },
     },
-   
-  });
+    {
+      sequelize,
+      modelName: "User",
+      hooks: {
+        beforeCreate: (user, opt) => {
+          user.password = hashPassword(user.password);
+        },
+      },
+    }
+  );
   return User;
 };

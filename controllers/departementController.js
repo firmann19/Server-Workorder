@@ -16,11 +16,11 @@ const create = async (req, res, next) => {
 };
 
 const getAll = async (req, res, next) => {
-  const { nama } = req.body;
+  const {  } = req.body;
 
   const { status, status_code, message, data } =
     await DepartementService.getAll({
-      nama,
+      
     });
 
   res.status(status_code).send({

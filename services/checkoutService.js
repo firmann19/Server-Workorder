@@ -1,5 +1,5 @@
 const CheckoutRepository = require("../repositories/checkoutRepository");
-const { verifMail } = require("./mail");
+const { verifMail, DiketahuiWO } = require("./mail");
 
 class CheckoutService {
   static async create({
@@ -9,6 +9,8 @@ class CheckoutService {
     tindakan,
     gantiSparepart,
     UserRequestId,
+    DepartUserId,
+    date_requestWO,
     UserApproveId,
     StatusWO,
   }) {
@@ -22,9 +24,11 @@ class CheckoutService {
         tindakan,
         gantiSparepart,
         UserRequestId,
+        DepartUserId,
         UserApproveId,
         StatusWO,
         otp: Math.floor(Math.random() * 9999),
+        date_requestWO: new Date('T00:00:00.000Z'),
       });
 
       await verifMail(getEmail, createdCheckout);
@@ -58,6 +62,7 @@ class CheckoutService {
     gantiSparepart,
     UserRequestId,
     UserApproveId,
+    date_requestWO,
     StatusWO,
     otp,
   }) {
@@ -70,6 +75,7 @@ class CheckoutService {
         gantiSparepart,
         UserRequestId,
         UserApproveId,
+        date_requestWO,
         StatusWO,
         otp,
       });
@@ -122,19 +128,16 @@ class CheckoutService {
 
   static async updateCheckout({
     id,
-    namaBarang,
-    kodeBarang,
-    permasalahan,
     tindakan,
     gantiSparepart,
-    UserRequestId,
-    UserApproveId,
-    StatusWO,
-    otp,
+    UserIT,
+    HeadITid,
   }) {
     try {
       // Melakukan check terhadap email
       const Check = await CheckoutRepository.getById({ id });
+
+      const getEmail = await CheckoutRepository.getEmailHeadIT({ HeadITid });
 
       // Jika input Id salah, maka akan memberikan message "id salah"
       if (!Check) {
@@ -150,16 +153,13 @@ class CheckoutService {
 
       const updateCheckout = await CheckoutRepository.updateCheckout({
         id,
-        namaBarang,
-        kodeBarang,
-        permasalahan,
         tindakan,
         gantiSparepart,
-        UserRequestId,
-        UserApproveId,
-        StatusWO,
-        otp,
+        UserIT,
+        HeadITid,
+        date_completionWO: new Date(),
       });
+      await DiketahuiWO(getEmail, updateCheckout);
 
       return {
         status: true,
@@ -170,6 +170,7 @@ class CheckoutService {
         },
       };
     } catch (error) {
+      console.log(error);
       return {
         status: false,
         status_code: 500,
@@ -229,6 +230,33 @@ class CheckoutService {
         message: error.message,
         data: {
           statusWO: null,
+        },
+      };
+    }
+  }
+
+  static async changeStatusPengerjaan({id, StatusPengerjaan}) {
+    try {
+      const statusPengerjaan = await CheckoutRepository.statusPengerjaan({
+        id,
+        StatusPengerjaan,
+      });
+
+      return {
+        status: true,
+        status_code: 200,
+        message: "status Pengerjaan successfully",
+        data: {
+          status_Pengerjaan: statusPengerjaan,
+        },
+      };
+    } catch (error) {
+      return {
+        status: false,
+        status_code: 500,
+        message: error.message,
+        data: {
+          statusPengerjaan: null,
         },
       };
     }

@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { Group } = require("../models");
 
 class GroupRepository {
@@ -17,9 +18,9 @@ class GroupRepository {
     return getGroupById;
   }
 
-  static async getAllGroup({ nama }) {
+  static async getAllGroup() {
     const getAllGroup = Group.findAll({
-      nama,
+      [Op.eq] : null
     });
 
     return getAllGroup;

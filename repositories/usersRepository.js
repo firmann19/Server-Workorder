@@ -43,11 +43,6 @@ class UserRepository {
   }
 
   static async getAllUser({
-    name,
-    email,
-    password,
-    posisi,
-    roles,
     DepartementId,
     GroupId,
   }) {

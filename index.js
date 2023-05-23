@@ -10,11 +10,10 @@ const app = express();
 const authController = require("./controllers/authController");
 const departementController = require("./controllers/departementController");
 const groupController = require("./controllers/groupController");
-const peralatanController = require("./controllers/peralatanController");
 const checkoutController = require("./controllers/checkoutController");
 
 // Import Middlewares
-const { authenticateUser, authorizeRoles } = require("./middlewares/auth");
+const { authenticateUser, authorizeRoles, authorizeHeadIT } = require("./middlewares/auth");
 
 app.use(cors());
 app.use(logger("dev"));
@@ -24,12 +23,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "/public")));
 
 //Checkout
-app.post("/api/v1/checkout", authenticateUser, checkoutController.create);
+app.post("/api/v1/checkout", authenticateUser,  checkoutController.create);
 
 app.get(
   "/api/v1/checkout",
   authenticateUser,
-  authorizeRoles,
   checkoutController.getAll
 );
 
@@ -43,22 +41,28 @@ app.get(
 app.put(
   "/api/v1/checkout/:id",
   authenticateUser,
-  authorizeRoles,
+  authorizeRoles('Staff IT', 'Manager IT'),
   checkoutController.update
 );
 
 app.delete(
   "/api/v1/checkout/:id",
   authenticateUser,
-  authorizeRoles,
+  authorizeRoles('Staff IT', 'Manager IT'),
   checkoutController.deleteById
 );
 
 app.put(
   "/api/v1/statusWO/:id",
   authenticateUser,
-  authorizeRoles,
   checkoutController.statusWO
+);
+
+app.put(
+  "/api/v1/statusPengerjaan/:id",
+  authenticateUser,
+  authorizeRoles("Manager IT"),
+  checkoutController.statusPengerjaan
 );
 
 //User
@@ -66,7 +70,7 @@ app.post("/api/v1/auth/signin", authController.login);
 
 app.post("/api/v1/auth/signup", authController.register);
 
-app.get("/api/v1/user", authenticateUser, authController.getAll);
+app.get("/api/v1/user", authenticateUser, authorizeRoles('Staff IT', 'Manager IT'), authController.getAll);
 
 app.get(
   "/api/v1/getAllApprove",
@@ -74,7 +78,7 @@ app.get(
   authController.getAllApprove
 );
 
-app.get("/api/v1/user/:id", authenticateUser, authController.getById);
+app.get("/api/v1/user/:id", authenticateUser, authorizeRoles, authController.getById);
 
 app.put(
   "/api/v1/user/:id",
@@ -86,7 +90,7 @@ app.put(
 app.delete(
   "/api/v1/user/:id",
   authenticateUser,
-  authorizeRoles,
+  authorizeRoles('Staff IT', 'Manager IT'),
   authController.deleteById
 );
 
@@ -94,35 +98,35 @@ app.delete(
 app.post(
   "/api/v1/departement",
   authenticateUser,
-  authorizeRoles,
+  authorizeRoles('Staff IT', 'Manager IT'),
   departementController.create
 );
 
 app.get(
   "/api/v1/departement",
   authenticateUser,
-  authorizeRoles,
+  authorizeRoles('Staff IT', 'Manager IT'),
   departementController.getAll
 );
 
 app.get(
   "/api/v1/departement/:id",
   authenticateUser,
-  authorizeRoles,
+  authorizeRoles('Staff IT', 'Manager IT'),
   departementController.getById
 );
 
 app.put(
   "/api/v1/departement/:id",
   authenticateUser,
-  authorizeRoles,
+  authorizeRoles('Staff IT', 'Manager IT'),
   departementController.update
 );
 
 app.delete(
   "/api/v1/departement/:id",
   authenticateUser,
-  authorizeRoles,
+  authorizeRoles('Staff IT', 'Manager IT'),
   departementController.deleteById
 );
 
@@ -130,73 +134,39 @@ app.delete(
 app.post(
   "/api/v1/group",
   authenticateUser,
-  authorizeRoles,
+  authorizeRoles('Staff IT', 'Manager IT'),
   groupController.create
 );
 
 app.get(
   "/api/v1/group",
   authenticateUser,
-  authorizeRoles,
+  authorizeRoles('Staff IT', 'Manager IT'),
   groupController.getAll
 );
 
 app.get(
   "/api/v1/group/:id",
   authenticateUser,
-  authorizeRoles,
+  authorizeRoles('Staff IT', 'Manager IT'),
   groupController.getById
 );
 
 app.put(
   "/api/v1/group/:id",
   authenticateUser,
-  authorizeRoles,
+  authorizeRoles('Staff IT', 'Manager IT'),
   groupController.update
 );
 
 app.delete(
   "/api/v1/group/:id",
   authenticateUser,
-  authorizeRoles,
+  authorizeRoles('Manager IT', 'Staff IT'),
   groupController.deleteById
 );
 
-//Peralatan
-app.post(
-  "/api/v1/peralatan",
-  authenticateUser,
-  authorizeRoles,
-  peralatanController.create
-);
 
-app.get(
-  "/api/v1/peralatan",
-  authenticateUser,
-  authorizeRoles,
-  peralatanController.getAll
-);
-
-app.get(
-  "/api/v1/peralatan/:id",
-  authenticateUser,
-  authorizeRoles,
-  peralatanController.getById
-);
-
-app.put(
-  "/api/v1/peralatan/:id",
-  authenticateUser,
-  authorizeRoles,
-  peralatanController.update
-);
-
-app.delete(
-  "/api/v1/peralatan/:id",
-  authenticateUser,
-  authorizeRoles,
-  peralatanController.deleteById
-);
 // Public File Access
 
 app.listen(port, () => {

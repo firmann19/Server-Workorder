@@ -27,10 +27,10 @@ class DepartementService {
     }
   }
 
-  static async getAll({ nama }) {
+  static async getAll() {
     try {
       const getAllDepartement = await DepartementRepository.getAllDepartement({
-        nama,
+        
       });
 
       return {

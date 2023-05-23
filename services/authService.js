@@ -2,6 +2,7 @@ const UsersRepository = require("../repositories/usersRepository");
 const { createTokenUser, createJWT } = require("../utils");
 const { comparePassword } = require("../helpers/bcrypt");
 const { User, Departement, Group } = require("../models");
+const { Op } = require("sequelize");
 
 const SALT_ROUND = 10;
 
@@ -215,9 +216,10 @@ class AuthService {
             data: {
               token,
               user: getUser.name,
-              email: getUser.email,
               departement: getUser.Departement.nama,
               departementId: getUser.DepartementId,
+              id: getUser.id,
+              role: getUser.roles
             },
           };
         }
@@ -235,24 +237,21 @@ class AuthService {
     }
   }
 
-  static async getAll({
-    name,
-    email,
-    password,
-    posisi,
-    roles,
-    DepartementId,
-    GroupId,
-  }) {
+  static async getAll({ DepartementId }) {
     try {
       const getAllUsers = await User.findAll({
-        name,
-        email,
-        password,
-        posisi,
-        roles,
-        DepartementId,
-        GroupId,
+        where: { DepartementId: { [Op.eq]: DepartementId } },
+        include: [
+          {
+            model: Departement,
+            attributes: ["nama"],
+          },
+        ],
+      });
+
+      getAllUsers.forEach((user) => {
+        user.departmentName = user.Departement.dataValues.nama;
+        console.log(user);
       });
 
       return {
