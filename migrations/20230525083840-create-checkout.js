@@ -1,7 +1,4 @@
 'use strict';
-
-const { sequelize } = require('../models');
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -13,7 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       UserRequestId: {
-        type: Sequelize.INTEGER
+       type: Sequelize.INTEGER,
       },
       DepartUserId: {
         type: Sequelize.INTEGER
@@ -26,18 +23,18 @@ module.exports = {
       },
       permasalahan: {
         type: Sequelize.STRING
-      }, 
-      UserApproveId: {
-         type: Sequelize.INTEGER
       },
-      date_requestWO: {
-        type: Sequelize.DATE
-      },
-      statusWO: {
+      StatusWO: {
         type: Sequelize.STRING
       },
       otp: {
         type: Sequelize.STRING
+      },
+      UserApproveId: {
+        type: Sequelize.INTEGER,
+       },
+      date_requestWO: {
+        type: Sequelize.DATE
       },
       tindakan: {
         type: Sequelize.STRING
@@ -46,14 +43,14 @@ module.exports = {
         type: Sequelize.STRING
       },
       StatusPengerjaan: {
-         type: Sequelize.STRING
-      },
-      HeadITid: {
-        type: Sequelize.INTEGER
-      },
-      UserIT: {
         type: Sequelize.STRING
       },
+      User_IT: {
+        type: Sequelize.STRING
+      },
+      HeadITId: {
+        type: Sequelize.INTEGER,
+       },
       date_completionWO: {
         type: Sequelize.DATE
       },

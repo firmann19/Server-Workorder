@@ -62,11 +62,17 @@ const getAllApprove = async (req, res, next) => {
 };
 
 const getAll = async (req, res, next) => {
-  const { DepartementId } =
-    req.user;
+  const { name, email, posisi, password, roles, DepartementId, GroupId } =
+    req.body;
 
   const { status, status_code, message, data } = await AuthService.getAll({
-    DepartementId
+    name,
+    email,
+    posisi,
+    password,
+    roles,
+    DepartementId,
+    GroupId,
   });
 
   res.status(status_code).send({

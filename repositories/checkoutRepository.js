@@ -40,6 +40,15 @@ class CheckoutRepository {
     return userRecords.email;
   }
 
+  static async getEmailHeadIT({ HeadITid }) {
+    const ITRecords = await User.findOne({
+      where: { id: HeadITid },
+      attributes: ["email"],
+    });
+
+    return ITRecords.email;
+  }
+
   static async getById({ id }) {
     const getCheckoutById = await Checkout.findOne({
       where: { id },
@@ -78,7 +87,7 @@ class CheckoutRepository {
     id,
     tindakan,
     gantiSparepart,
-    UserIT,
+    User_IT,
     HeadITid,
     date_completionWO,
   }) {
@@ -86,7 +95,7 @@ class CheckoutRepository {
       {
         tindakan,
         gantiSparepart,
-        UserIT,
+        User_IT,
         HeadITid,
         date_completionWO,
       },
@@ -126,15 +135,6 @@ class CheckoutRepository {
       }
     );
     return statusPengerjaan;
-  }
-
-  static async getEmailHeadIT({ HeadITid }) {
-    const userRecords = await User.findOne({
-      where: { id: HeadITid },
-      attributes: ["email"],
-    });
-
-    return userRecords.email;
   }
 }
 

@@ -47,7 +47,6 @@ class UserRepository {
     GroupId,
   }) {
     const getAllUser = User.findAll({
-      name,
       email,
       password,
       posisi,

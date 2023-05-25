@@ -86,7 +86,7 @@ const getById = async (req, res, next) => {
 const update = async (req, res, next) => {
   const { id } = req.params;
 
-  const { tindakan, gantiSparepart, UserIT, HeadITid, date_completionWO } =
+  const { tindakan, gantiSparepart, User_IT, HeadITid, date_completionWO } =
     req.body;
 
   const { status, status_code, message, data } =
@@ -94,7 +94,7 @@ const update = async (req, res, next) => {
       id,
       tindakan,
       gantiSparepart,
-      UserIT,
+      User_IT,
       HeadITid,
       date_completionWO,
     });

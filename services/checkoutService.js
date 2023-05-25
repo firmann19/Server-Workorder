@@ -1,5 +1,6 @@
 const CheckoutRepository = require("../repositories/checkoutRepository");
 const { verifMail, DiketahuiWO } = require("./mail");
+const { Checkout, Departement } = require("../models");
 
 class CheckoutService {
   static async create({
@@ -10,7 +11,6 @@ class CheckoutService {
     gantiSparepart,
     UserRequestId,
     DepartUserId,
-    date_requestWO,
     UserApproveId,
     StatusWO,
   }) {
@@ -28,7 +28,7 @@ class CheckoutService {
         UserApproveId,
         StatusWO,
         otp: Math.floor(Math.random() * 9999),
-        date_requestWO: new Date('T00:00:00.000Z'),
+        date_requestWO: new Date(),
       });
 
       await verifMail(getEmail, createdCheckout);
@@ -130,14 +130,16 @@ class CheckoutService {
     id,
     tindakan,
     gantiSparepart,
-    UserIT,
+    User_IT,
     HeadITid,
   }) {
     try {
       // Melakukan check terhadap email
       const Check = await CheckoutRepository.getById({ id });
 
-      const getEmail = await CheckoutRepository.getEmailHeadIT({ HeadITid });
+      const getEmailHeadIT = await CheckoutRepository.getEmailHeadIT({
+        HeadITid,
+      });
 
       // Jika input Id salah, maka akan memberikan message "id salah"
       if (!Check) {
@@ -155,11 +157,11 @@ class CheckoutService {
         id,
         tindakan,
         gantiSparepart,
-        UserIT,
+        User_IT,
         HeadITid,
         date_completionWO: new Date(),
       });
-      await DiketahuiWO(getEmail, updateCheckout);
+      await DiketahuiWO(getEmailHeadIT, updateCheckout);
 
       return {
         status: true,
@@ -235,7 +237,7 @@ class CheckoutService {
     }
   }
 
-  static async changeStatusPengerjaan({id, StatusPengerjaan}) {
+  static async changeStatusPengerjaan({ id, StatusPengerjaan }) {
     try {
       const statusPengerjaan = await CheckoutRepository.statusPengerjaan({
         id,
