@@ -1,7 +1,7 @@
 const UsersRepository = require("../repositories/usersRepository");
 const { createTokenUser, createJWT } = require("../utils");
 const { comparePassword } = require("../helpers/bcrypt");
-const { User, Departement } = require("../models");
+const { User, Departement, Group } = require("../models");
 const { Op } = require("sequelize");
 
 const SALT_ROUND = 10;
@@ -237,24 +237,20 @@ class AuthService {
     }
   }
 
-  static async getAll({
-    name,
-    email,
-    posisi,
-    password,
-    roles,
-    DepartementId,
-    GroupId,
-  }) {
+  static async getAll() {
     try {
       const getAllUsers = await User.findAll({
-        name,
-        email,
-        posisi,
-        password,
-        roles,
-        DepartementId,
-        GroupId,
+        include: [
+          {
+            model: Departement,
+            attributes: ["nama", "id"],
+          },
+          {
+            model: Group,
+            attributes: ["nama", "id"]
+
+          }
+        ],
       });
 
       return {
@@ -407,6 +403,7 @@ class AuthService {
         },
       };
     } catch (error) {
+      console.log(error)
       return {
         status: false,
         status_code: 500,

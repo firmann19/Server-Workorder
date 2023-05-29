@@ -1,70 +1,86 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Checkouts', {
+    await queryInterface.createTable("Checkouts", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       UserRequestId: {
-       type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
       },
       DepartUserId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Departements",
+          key: "id",
+        },
       },
       namaBarang: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       kodeBarang: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       permasalahan: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       StatusWO: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       otp: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       UserApproveId: {
         type: Sequelize.INTEGER,
-       },
+        references: {
+          model: "Users",
+          key: "id",
+        },
+      },
       date_requestWO: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       tindakan: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       gantiSparepart: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       StatusPengerjaan: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       User_IT: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       HeadITId: {
         type: Sequelize.INTEGER,
-       },
+        references: {
+          model: "Users",
+          key: "id",
+        },
+      },
       date_completionWO: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Checkouts');
-  }
+    await queryInterface.dropTable("Checkouts");
+  },
 };

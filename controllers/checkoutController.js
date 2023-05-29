@@ -1,3 +1,4 @@
+const { getAllCheckout } = require("../repositories/checkoutRepository");
 const CheckoutService = require("../services/checkoutService");
 
 const create = async (req, res, next) => {
@@ -37,35 +38,19 @@ const create = async (req, res, next) => {
 };
 
 const getAll = async (req, res, next) => {
-  const {
-    namaBarang,
-    kodeBarang,
-    permasalahan,
-    tindakan,
-    gantiSparepart,
-    UserRequestId,
-    UserApproveId,
-    StatusWO,
-    otp,
-  } = req.body;
+  try {
+   
 
-  const { status, status_code, message, data } = await CheckoutService.getAll({
-    namaBarang,
-    kodeBarang,
-    permasalahan,
-    tindakan,
-    gantiSparepart,
-    UserRequestId,
-    UserApproveId,
-    StatusWO,
-    otp,
-  });
+    const  data  = await CheckoutService.getAll(
+       req   
+    );
 
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+    res.status(200).send({
+      data: data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const getById = async (req, res, next) => {

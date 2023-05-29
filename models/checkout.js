@@ -9,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Checkout.belongsTo(models.User, {
+        foreignKey: "UserRequestId"
+      });
+      Checkout.belongsTo(models.Departement, {
+        foreignKey: "DepartUserId"
+      });
     }
   }
   Checkout.init(

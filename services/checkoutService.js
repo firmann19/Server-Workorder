@@ -1,6 +1,21 @@
 const CheckoutRepository = require("../repositories/checkoutRepository");
 const { verifMail, DiketahuiWO } = require("./mail");
-const { Checkout, Departement } = require("../models");
+const { Checkout,User, Departement } = require("../models");
+
+const getPagination = (page, size) => {
+  const limit = size ? +size : 3;
+  const offset = page ? page * limit : 0;
+
+  return { limit, offset };
+};
+
+const getPagingData = (data, page, limit) => {
+  const { count: totalItems, rows: checkouts } = data;
+  const currentPage = page ? +page : 0;
+  const totalPages = Math.ceil(totalItems / limit);
+
+  return { totalItems, checkouts, totalPages, currentPage };
+};
 
 class CheckoutService {
   static async create({
@@ -54,41 +69,31 @@ class CheckoutService {
     }
   }
 
-  static async getAll({
-    namaBarang,
-    kodeBarang,
-    permasalahan,
-    tindakan,
-    gantiSparepart,
-    UserRequestId,
-    UserApproveId,
-    date_requestWO,
-    StatusWO,
-    otp,
-  }) {
+  static async getAll(req) {
     try {
-      const getAllCheckout = await CheckoutRepository.getAllCheckout({
-        namaBarang,
-        kodeBarang,
-        permasalahan,
-        tindakan,
-        gantiSparepart,
-        UserRequestId,
-        UserApproveId,
-        date_requestWO,
-        StatusWO,
-        otp,
-      });
+      const { size = 10, page = 1 } = req.query;
 
-      return {
-        status: true,
-        status_code: 200,
-        message: "Get All successfully",
-        data: {
-          getAll_checkout: getAllCheckout,
-        },
-      };
+      const { limit, offset } = getPagination(page, size);
+
+      const data = await Checkout.findAndCountAll({
+        limit,
+        offset,
+        include: [
+          {
+            model: User,
+            attributes: ["name", "id"],
+          },
+          {
+            model: Departement,
+            attributes: ["nama", "id"],
+          },
+        ],
+      });
+      const response = getPagingData(data, page, limit);
+      console.log(response);
+      return response;
     } catch (error) {
+      console.log(error);
       return {
         status: false,
         status_code: 500,
