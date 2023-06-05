@@ -71,7 +71,7 @@ class CheckoutService {
 
   static async getAll(req) {
     try {
-      const { size = 10, page = 1 } = req.query;
+      const { size = 10, page = 0 } = req.query;
 
       const { limit, offset } = getPagination(page, size);
 

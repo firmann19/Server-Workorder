@@ -39,14 +39,10 @@ const create = async (req, res, next) => {
 
 const getAll = async (req, res, next) => {
   try {
-   
-
-    const  data  = await CheckoutService.getAll(
-       req   
-    );
+    const result = await CheckoutService.getAll(req);
 
     res.status(200).send({
-      data: data,
+      data: result,
     });
   } catch (error) {
     console.log(error);
