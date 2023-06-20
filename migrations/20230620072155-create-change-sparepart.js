@@ -2,47 +2,38 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('ChangeSpareparts', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      userRequestWo: {
         type: Sequelize.STRING
       },
-      email: {
+      departementUser: {
         type: Sequelize.STRING
       },
-      password: {
+      namaSparepart: {
         type: Sequelize.STRING
       },
-      DepartementId : {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Departements",
-          key: "id",
-        },
+      harga: {
+        type: Sequelize.STRING
       },
-      GroupId : {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Groups",
-          key: "id",
-        },
+      jumlahOrder: {
+        type: Sequelize.STRING
       },
-      posisiId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Posisis",
-          key: "id",
-        },
+      alasan: {
+        type: Sequelize.STRING
       },
-      roles: {
+      statusPengajuan: {
+        type: Sequelize.STRING
+      },
+      HeadIT: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Roles",
+          model: "Users",
           key: "id",
         },
       },
@@ -57,6 +48,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('ChangeSpareparts');
   }
 };

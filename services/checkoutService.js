@@ -1,6 +1,6 @@
 const CheckoutRepository = require("../repositories/checkoutRepository");
 const { verifMail, DiketahuiWO } = require("./mail");
-const { Checkout,User, Departement } = require("../models");
+const { Checkout, User, Departement } = require("../models");
 
 const getPagination = (page, size) => {
   const limit = size ? +size : 3;
@@ -69,7 +69,7 @@ class CheckoutService {
     }
   }
 
-  static async getAll(req) {
+  /* static async getAll(req) {
     try {
       const { size = 5, page = 0 } = req.query;
 
@@ -103,12 +103,48 @@ class CheckoutService {
         },
       };
     }
+  } */
+
+  static async getAll() {
+    try {
+      const getAllCheckout = await Checkout.findAll({
+        include: [
+          {
+            model: Departement,
+            attributes: ["nama", "id"],
+          },
+          {
+            model: User,
+            attributes: ["name", "id"]
+
+          }
+        ],
+      });
+
+      return {
+        status: true,
+        status_code: 200,
+        message: "Get All successfully",
+        data: {
+          getAll_checkout: getAllCheckout,
+        },
+      };
+    } catch (error) {
+      return {
+        status: false,
+        status_code: 500,
+        message: error.message,
+        data: {
+          getAll_checkout: null,
+        },
+      };
+    }
   }
 
   static async getCheckoutById({ id }) {
     try {
       const getCheckoutById = await CheckoutRepository.getById({
-        id,
+        id
       });
 
       return {
@@ -215,11 +251,12 @@ class CheckoutService {
     }
   }
 
-  static async changeStatusWO({ id, StatusWO }) {
+  static async changeStatusWO({ id, otp}) {
     try {
       const statusWO = await CheckoutRepository.statusWorkOrder({
         id,
-        StatusWO,
+        otp,
+        StatusWO: "Approve",
       });
 
       return {
@@ -231,6 +268,7 @@ class CheckoutService {
         },
       };
     } catch (error) {
+      console.log(error);
       return {
         status: false,
         status_code: 500,
@@ -253,6 +291,33 @@ class CheckoutService {
         status: true,
         status_code: 200,
         message: "status Pengerjaan successfully",
+        data: {
+          status_Pengerjaan: statusPengerjaan,
+        },
+      };
+    } catch (error) {
+      return {
+        status: false,
+        status_code: 500,
+        message: error.message,
+        data: {
+          statusPengerjaan: null,
+        },
+      };
+    }
+  }
+
+  static async changeStatusProgress({ id }) {
+    try {
+      const statusPengerjaan = await CheckoutRepository.statusPengerjaan({
+        id,
+        StatusPengerjaan : "Close",
+      });
+
+      return {
+        status: true,
+        status_code: 200,
+        message: "Work Order Telah Selesai",
         data: {
           status_Pengerjaan: statusPengerjaan,
         },

@@ -1,11 +1,11 @@
-const { User, Departement } = require("../models");
+const { User, Departement, Role } = require("../models");
 
 class UserRepository {
   static async create({
     name,
     email,
     password,
-    posisi,
+    posisiId,
     roles,
     DepartementId,
     GroupId,
@@ -14,7 +14,7 @@ class UserRepository {
       name,
       email,
       password,
-      posisi,
+      posisiId,
       roles,
       DepartementId,
       GroupId,
@@ -30,7 +30,12 @@ class UserRepository {
         include: [{
           model: Departement,
           attribubtes: ["nama", "id"]
-        }]
+        },
+        {
+          model: Role,
+          attribubtes: ["roleEmploye", "id"]
+        }
+      ]
     });
     return getUserByEmail;
   }
@@ -45,11 +50,13 @@ class UserRepository {
   static async getAllUser({
     DepartementId,
     GroupId,
+    roles,
+    posisiId
   }) {
     const getAllUser = User.findAll({
       email,
       password,
-      posisi,
+      posisiId,
       roles,
       DepartementId,
       GroupId,
@@ -64,7 +71,7 @@ class UserRepository {
     name,
     email,
     password,
-    posisi,
+    posisiId,
     roles,
     DepartementId,
     GroupId,
@@ -74,7 +81,7 @@ class UserRepository {
         name,
         email,
         password,
-        posisi,
+        posisiId,
         roles,
         DepartementId,
         GroupId,

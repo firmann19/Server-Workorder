@@ -1,13 +1,13 @@
 const AuthService = require("../services/authService");
 
 const register = async (req, res) => {
-  const { name, email, posisi, password, roles, DepartementId, GroupId } =
+  const { name, email, posisiId, password, roles, DepartementId, GroupId } =
     req.body;
 
   const { status, status_code, message, data } = await AuthService.register({
     name,
     email,
-    posisi,
+    posisiId,
     password,
     roles,
     DepartementId,
@@ -38,7 +38,7 @@ const login = async (req, res) => {
 };
 
 const getAllApprove = async (req, res, next) => {
-  const { name, email, posisi, password, roles, DepartementId, GroupId } =
+  const { name, email, posisiId, password, roles, DepartementId, GroupId } =
     req.user;
 
   console.log(req.user);
@@ -47,7 +47,7 @@ const getAllApprove = async (req, res, next) => {
     await AuthService.getAllApproveUsers({
       name,
       email,
-      posisi,
+      posisiId,
       password,
       roles,
       DepartementId,
@@ -62,13 +62,13 @@ const getAllApprove = async (req, res, next) => {
 };
 
 const getAll = async (req, res, next) => {
-  const { name, email, posisi, password, roles, DepartementId, GroupId } =
+  const { name, email, posisiId, password, roles, DepartementId, GroupId } =
     req.body;
 
   const { status, status_code, message, data } = await AuthService.getAll({
     name,
     email,
-    posisi,
+    posisiId,
     password,
     roles,
     DepartementId,
@@ -99,14 +99,14 @@ const getById = async (req, res, next) => {
 const update = async (req, res, next) => {
   const { id } = req.params;
 
-  const { name, email, posisi, password, roles, DepartementId, GroupId } =
+  const { name, email, posisiId, password, roles, DepartementId, GroupId } =
     req.body;
 
   const { status, status_code, message, data } = await AuthService.updateUser({
     id,
     name,
     email,
-    posisi,
+    posisiId,
     password,
     roles,
     DepartementId,

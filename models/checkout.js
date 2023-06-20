@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       StatusWO: {
         type: DataTypes.STRING,
         defaultValue: "Belum Approve",
+        values: ["Approve", "Belum Approve"]
       },
       UserApproveId: DataTypes.INTEGER,
       otp: DataTypes.STRING,
@@ -35,10 +36,11 @@ module.exports = (sequelize, DataTypes) => {
       gantiSparepart: DataTypes.STRING,
       StatusPengerjaan: {
         type: DataTypes.STRING,
+        values: ["Pending", "OnProgress", "Close"],
         defaultValue: "Pending",
       },
       HeadITid: DataTypes.INTEGER,
-      User_IT: DataTypes.STRING,
+      User_IT: DataTypes.INTEGER,
       date_completionWO: DataTypes.DATE,
     },
     {

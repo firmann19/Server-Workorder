@@ -18,6 +18,12 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsTo(models.Group, {
         foreignKey: "GroupId"
       });
+      User.belongsTo(models.Posisi, {
+        foreignKey: "posisiId"
+      });
+      User.belongsTo(models.Role, {
+        foreignKey: "roles"
+      });
     }
   }
   User.init({
@@ -26,12 +32,8 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     DepartementId: DataTypes.INTEGER,
     GroupId: DataTypes.INTEGER,
-    posisi: DataTypes.STRING,
-    roles: {
-      type: DataTypes.STRING,
-      values: ["User", "Staff IT", "Manager IT"],
-      defaultValue: "User",
-    },
+    posisiId: DataTypes.INTEGER,
+    roles: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'User',

@@ -1,7 +1,7 @@
 const UsersRepository = require("../repositories/usersRepository");
 const { createTokenUser, createJWT } = require("../utils");
 const { comparePassword } = require("../helpers/bcrypt");
-const { User, Departement, Group } = require("../models");
+const { User, Departement, Group, Role, Posisi } = require("../models");
 const { Op } = require("sequelize");
 
 const SALT_ROUND = 10;
@@ -10,7 +10,7 @@ class AuthService {
   static async register({
     name,
     email,
-    posisi,
+    posisiId,
     roles,
     password,
     DepartementId,
@@ -40,11 +40,11 @@ class AuthService {
         };
       }
 
-      if (!posisi) {
+      if (!posisiId) {
         return {
           status: false,
           status_code: 400,
-          message: "Role wajib diisi",
+          message: "Posisi wajib diisi",
           data: {
             registered_user: null,
           },
@@ -120,7 +120,7 @@ class AuthService {
           name,
           email,
           password,
-          posisi,
+          posisiId,
           roles,
           password,
           DepartementId,
@@ -219,7 +219,8 @@ class AuthService {
               departement: getUser.Departement.nama,
               departementId: getUser.DepartementId,
               id: getUser.id,
-              role: getUser.roles,
+              role: getUser.Role.roleEmploye,
+              idUser: getUser.id
             },
           };
         }
@@ -248,6 +249,16 @@ class AuthService {
           {
             model: Group,
             attributes: ["nama", "id"]
+
+          },
+          {
+            model: Role,
+            attributes: ["roleEmploye", "id"]
+
+          },
+          {
+            model: Posisi,
+            attributes: ["jabatan", "id"]
 
           }
         ],
@@ -337,7 +348,7 @@ class AuthService {
     id,
     name,
     email,
-    posisi,
+    posisiId,
     roles,
     DepartementId,
     GroupId,
@@ -362,7 +373,7 @@ class AuthService {
         id,
         name,
         email,
-        posisi,
+        posisiId,
         roles,
         DepartementId,
         GroupId,

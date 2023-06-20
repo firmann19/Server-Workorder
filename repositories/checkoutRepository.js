@@ -112,10 +112,11 @@ class CheckoutRepository {
     return deletedCheckout;
   }
 
-  static async statusWorkOrder({ id, StatusWO }) {
+  static async statusWorkOrder({ id, StatusWO, otp }) {
     const statusWO = await Checkout.update(
       {
         StatusWO,
+        otp,
       },
       {
         where: { id },

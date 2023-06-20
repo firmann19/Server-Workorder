@@ -37,7 +37,7 @@ const create = async (req, res, next) => {
   });
 };
 
-const getAll = async (req, res, next) => {
+/* const getAll = async (req, res, next) => {
   try {
     const result = await CheckoutService.getAll(req);
 
@@ -47,6 +47,20 @@ const getAll = async (req, res, next) => {
   } catch (error) {
     console.log(error);
   }
+}; */
+
+const getAll = async (req, res, next) => {
+  const {} = req.body;
+
+  const { status, status_code, message, data } = await CheckoutService.getAll(
+    {}
+  );
+
+  res.status(status_code).send({
+    status: status,
+    message: message,
+    data: data,
+  });
 };
 
 const getById = async (req, res, next) => {
@@ -67,8 +81,14 @@ const getById = async (req, res, next) => {
 const update = async (req, res, next) => {
   const { id } = req.params;
 
-  const { tindakan, gantiSparepart, User_IT, HeadITid, date_completionWO } =
-    req.body;
+  const {
+    tindakan,
+    gantiSparepart,
+    User_IT,
+    HeadITid,
+    date_completionWO,
+    Laporan,
+  } = req.body;
 
   const { status, status_code, message, data } =
     await CheckoutService.updateCheckout({
@@ -78,6 +98,7 @@ const update = async (req, res, next) => {
       User_IT,
       HeadITid,
       date_completionWO,
+      Laporan,
     });
 
   res.status(status_code).send({
@@ -104,12 +125,13 @@ const deleteById = async (req, res, next) => {
 
 const statusWO = async (req, res, next) => {
   const { id } = req.params;
-  const { StatusWO } = req.body;
+  const { StatusWO, otp } = req.body;
 
   const { status, status_code, message, data } =
     await CheckoutService.changeStatusWO({
       id,
       StatusWO,
+      otp,
     });
 
   res.status(status_code).send({
@@ -136,6 +158,23 @@ const statusPengerjaan = async (req, res, next) => {
   });
 };
 
+const statusProgressWO = async (req, res, next) => {
+  const { id } = req.params;
+  const { StatusPengerjaan } = req.body;
+
+  const { status, status_code, message, data } =
+    await CheckoutService.changeStatusProgress({
+      id,
+      StatusPengerjaan,
+    });
+
+  res.status(status_code).send({
+    status: status,
+    message: message,
+    data: data,
+  });
+};
+
 module.exports = {
   create,
   getAll,
@@ -143,5 +182,6 @@ module.exports = {
   update,
   statusWO,
   statusPengerjaan,
+  statusProgressWO,
   deleteById,
 };
