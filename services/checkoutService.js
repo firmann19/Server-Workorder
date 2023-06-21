@@ -115,6 +115,7 @@ class CheckoutService {
           },
           {
             model: User,
+            as: "userRequest",
             attributes: ["name", "id"]
 
           }
@@ -130,6 +131,7 @@ class CheckoutService {
         },
       };
     } catch (error) {
+      console.log(error)
       return {
         status: false,
         status_code: 500,
@@ -156,6 +158,7 @@ class CheckoutService {
         },
       };
     } catch (error) {
+      console.log(error)
       return {
         status: false,
         status_code: 500,

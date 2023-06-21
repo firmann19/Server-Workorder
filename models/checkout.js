@@ -10,10 +10,23 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Checkout.belongsTo(models.User, {
+        as:'userRequest',
         foreignKey: "UserRequestId"
       });
+      Checkout.belongsTo(models.User, {
+        as:'userApprove',
+        foreignKey: "UserApproveId"
+      });
+      Checkout.belongsTo(models.User, {
+        as:'userIT',
+        foreignKey: "User_IT"
+      });
+      Checkout.belongsTo(models.User, {
+        as:'HeadIT',
+        foreignKey: "HeadITid"
+      });
       Checkout.belongsTo(models.Departement, {
-        foreignKey: "DepartUserId"
+        foreignKey: "DepartUserId",
       });
     }
   }
@@ -27,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       StatusWO: {
         type: DataTypes.STRING,
         defaultValue: "Belum Approve",
-        values: ["Approve", "Belum Approve"]
+        values: ["Approve", "Belum Approve"],
       },
       UserApproveId: DataTypes.INTEGER,
       otp: DataTypes.STRING,

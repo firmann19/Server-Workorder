@@ -1,4 +1,4 @@
-const { User, Departement, Role } = require("../models");
+const { User, Departement, Role, Group, Posisi } = require("../models");
 
 class UserRepository {
   static async create({
@@ -43,6 +43,23 @@ class UserRepository {
   static async getById({ id }) {
     const getUserById = await User.findOne({
       where: { id },
+      include: [{
+        model: Departement,
+        attribubtes: ["nama", "id"]
+      },
+      {
+        model: Group,
+        attribubtes: ["nama", "id"]
+      },
+      {
+        model: Posisi,
+        attribubtes: ["jabatan", "id"]
+      },
+      {
+        model: Role,
+        attribubtes: ["roleEmploye", "id"]
+      }
+    ]
     });
     return getUserById;
   }
@@ -86,7 +103,7 @@ class UserRepository {
         DepartementId,
         GroupId,
       },
-      { where: { id } }
+      { where: { id }}
     );
     return updateUser;
   }

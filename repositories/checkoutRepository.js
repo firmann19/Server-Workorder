@@ -1,4 +1,4 @@
-const { Checkout, User } = require("../models");
+const { Checkout, User, Departement } = require("../models");
 
 class CheckoutRepository {
   static async create({
@@ -52,6 +52,32 @@ class CheckoutRepository {
   static async getById({ id }) {
     const getCheckoutById = await Checkout.findOne({
       where: { id },
+      include: [
+        {
+          model: User,
+          as: "userRequest",
+          attribubtes: ["name", "id"],
+        },
+        {
+          model: User,
+          as: "userApprove",
+          attribubtes: ["name", "id"],
+        },
+        {
+          model: User,
+          as: "userIT",
+          attribubtes: ["name", "id"],
+        },
+        {
+          model: User,
+          as: "HeadIT",
+          attribubtes: ["name", "id"],
+        },
+        {
+          model: Departement,
+          attribubtes: ["nama", "id"],
+        },
+      ],
     });
 
     return getCheckoutById;
