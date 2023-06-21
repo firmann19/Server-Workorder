@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     DepartementId: DataTypes.INTEGER,
     GroupId: DataTypes.INTEGER,
     posisiId: DataTypes.INTEGER,
-    roles: DataTypes.INTEGER
+    roles: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'User',

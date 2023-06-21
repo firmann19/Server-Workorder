@@ -1,4 +1,11 @@
-const { User, Departement, Role, Group, Posisi } = require("../models");
+const {
+  User,
+  Departement,
+  Role,
+  Group,
+  Posisi,
+  ManagerIT,
+} = require("../models");
 
 class UserRepository {
   static async create({
@@ -27,15 +34,16 @@ class UserRepository {
     const getUserByEmail = await User.findOne({
       where: { email },
 
-        include: [{
+      include: [
+        {
           model: Departement,
-          attribubtes: ["nama", "id"]
+          attribubtes: ["nama", "id"],
         },
         {
           model: Role,
-          attribubtes: ["roleEmploye", "id"]
-        }
-      ]
+          attribubtes: ["roleEmploye", "id"],
+        },
+      ],
     });
     return getUserByEmail;
   }
@@ -43,42 +51,37 @@ class UserRepository {
   static async getById({ id }) {
     const getUserById = await User.findOne({
       where: { id },
-      include: [{
-        model: Departement,
-        attribubtes: ["nama", "id"]
-      },
-      {
-        model: Group,
-        attribubtes: ["nama", "id"]
-      },
-      {
-        model: Posisi,
-        attribubtes: ["jabatan", "id"]
-      },
-      {
-        model: Role,
-        attribubtes: ["roleEmploye", "id"]
-      }
-    ]
+      include: [
+        {
+          model: Departement,
+          attribubtes: ["nama", "id"],
+        },
+        {
+          model: Group,
+          attribubtes: ["nama", "id"],
+        },
+        {
+          model: Posisi,
+          attribubtes: ["jabatan", "id"],
+        },
+        {
+          model: Role,
+          attribubtes: ["roleEmploye", "id"],
+        },
+      ],
     });
     return getUserById;
   }
 
-  static async getAllUser({
-    DepartementId,
-    GroupId,
-    roles,
-    posisiId
-  }) {
+  static async getAllUser() {
     const getAllUser = User.findAll({
-      email,
-      password,
-      posisiId,
-      roles,
-      DepartementId,
-      GroupId,
-    },
-    );
+      include: [
+        {
+          model: Role,
+          attribubtes: ["roleEmploye", "id"],
+        },
+      ],
+    });
 
     return getAllUser;
   }
@@ -103,7 +106,7 @@ class UserRepository {
         DepartementId,
         GroupId,
       },
-      { where: { id }}
+      { where: { id } }
     );
     return updateUser;
   }

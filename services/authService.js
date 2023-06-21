@@ -1,7 +1,7 @@
 const UsersRepository = require("../repositories/usersRepository");
 const { createTokenUser, createJWT } = require("../utils");
 const { comparePassword } = require("../helpers/bcrypt");
-const { User, Departement, Group, Role, Posisi } = require("../models");
+const { User, Departement, Group, Role, Posisi, ManagerIT } = require("../models");
 const { Op } = require("sequelize");
 
 const SALT_ROUND = 10;
@@ -14,7 +14,7 @@ class AuthService {
     roles,
     password,
     DepartementId,
-    GroupId,
+    GroupId
   }) {
     try {
       // Payload Validation
@@ -124,7 +124,7 @@ class AuthService {
           roles,
           password,
           DepartementId,
-          GroupId,
+          GroupId
         });
 
         return {
@@ -185,6 +185,8 @@ class AuthService {
 
       const getUser = await UsersRepository.getByEmail({ email });
 
+      const getUserByRole = await UsersRepository.getAllUser();
+
       if (!getUser) {
         return {
           status: false,
@@ -220,7 +222,9 @@ class AuthService {
               departementId: getUser.DepartementId,
               id: getUser.id,
               role: getUser.Role.roleEmploye,
-              idUser: getUser.id
+              idUser: getUser.id,
+              getNameManager: getUserByRole.name="Firman Ramadhan",
+              getManager: getUserByRole.id=30
             },
           };
         }
@@ -248,18 +252,15 @@ class AuthService {
           },
           {
             model: Group,
-            attributes: ["nama", "id"]
-
+            attributes: ["nama", "id"],
           },
           {
             model: Role,
-            attributes: ["roleEmploye", "id"]
-
+            attributes: ["roleEmploye", "id"],
           },
           {
             model: Posisi,
-            attributes: ["jabatan", "id"]
-
+            attributes: ["jabatan", "id"],
           }
         ],
       });
@@ -351,7 +352,7 @@ class AuthService {
     posisiId,
     roles,
     DepartementId,
-    GroupId,
+    GroupId
   }) {
     try {
       // Melakukan check terhadap email
@@ -376,7 +377,7 @@ class AuthService {
         posisiId,
         roles,
         DepartementId,
-        GroupId,
+        GroupId
       });
 
       return {
@@ -388,7 +389,7 @@ class AuthService {
         },
       };
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return {
         status: false,
         status_code: 500,
@@ -415,7 +416,7 @@ class AuthService {
         },
       };
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return {
         status: false,
         status_code: 500,
