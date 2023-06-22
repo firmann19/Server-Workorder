@@ -227,7 +227,7 @@ class AuthService {
               role: getUser.Role.roleEmploye,
               idUser: getUser.id,
               getNameManager: getUserByRole.name="Firman",
-              getManager: getUserByRole.id=33,
+              getManager: getUserByRole.id=36,
               getCountWO: CountDocument.data.WorkOrder
             },
           };
