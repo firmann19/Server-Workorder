@@ -47,4 +47,21 @@ const DiketahuiWO = async (getEmail, data) => {
   }
 };
 
-module.exports = { verifMail, DiketahuiWO };
+const ApproveSparepart = async (getEmail, data) => {
+  try {
+    let template = fs.readFileSync("views/email/approveSparepart.html", "utf8");
+
+    let message = {
+      from: "'WorkOrder HTA' <no-reply@gmail.com>",
+      to: getEmail,
+      subject: "Informasi Pergantian Sparepart",
+      html: Mustache.render(template, data),
+    };
+
+    return await transporter.sendMail(message);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { verifMail, DiketahuiWO, ApproveSparepart };

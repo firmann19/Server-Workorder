@@ -14,6 +14,8 @@ const checkoutController = require("./controllers/checkoutController");
 const posisiController = require("./controllers/posisiController");
 const roleController = require("./controllers/roleController");
 const changeSparepartController = require("./controllers/changeSparepartController");
+const dashboardController = require("./controllers/DashboardController");
+
 
 // Import Middlewares
 const {
@@ -28,6 +30,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "/public")));
+
+//ChangeSparepart
+app.get(
+  "/api/v1/count",
+  //authenticateUser,
+  //authorizeRoles("Staff IT", "Manager IT"),
+  dashboardController.CountDocument
+);
 
 //ChangeSparepart
 app.post(
@@ -104,7 +114,6 @@ app.put(
 app.delete(
   "/api/v1/checkout/:id",
   authenticateUser,
-  authorizeRoles(2, 3),
   checkoutController.deleteById
 );
 

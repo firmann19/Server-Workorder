@@ -1,5 +1,5 @@
 const ChangeSparepartRepository = require("../repositories/changeSparepart");
-const { verifMail } = require("./mail");
+const { ApproveSparepart } = require("./mail");
 
 class ChangeSparepartService {
   static async create({
@@ -28,7 +28,7 @@ class ChangeSparepartService {
         HeadIT,
       });
 
-      await verifMail(getEmail, createdChangeSparepart);
+      await ApproveSparepart(getEmail, createdChangeSparepart);
 
       return {
         status: true,

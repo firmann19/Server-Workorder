@@ -3,6 +3,7 @@ const { createTokenUser, createJWT } = require("../utils");
 const { comparePassword } = require("../helpers/bcrypt");
 const { User, Departement, Group, Role, Posisi, ManagerIT } = require("../models");
 const { Op } = require("sequelize");
+const DashboardService = require("./dashboard");
 
 const SALT_ROUND = 10;
 
@@ -187,6 +188,8 @@ class AuthService {
 
       const getUserByRole = await UsersRepository.getAllUser();
 
+      const CountDocument = await DashboardService.Count();
+
       if (!getUser) {
         return {
           status: false,
@@ -223,8 +226,9 @@ class AuthService {
               id: getUser.id,
               role: getUser.Role.roleEmploye,
               idUser: getUser.id,
-              getNameManager: getUserByRole.name="Firman Ramadhan",
-              getManager: getUserByRole.id=30
+              getNameManager: getUserByRole.name="Firman",
+              getManager: getUserByRole.id=33,
+              getCountWO: CountDocument.data.WorkOrder
             },
           };
         }
