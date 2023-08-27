@@ -1,19 +1,17 @@
-const DashboardService = require("../services/dashboard");
+const { CountAll } = require("../services/dashboard");
 
-const CountDocument = async (req, res, next) => {
-    const {} = req.body;
-  
-    const { status, status_code, message, data } =
-      await DashboardService.Count({});
-  
-    res.status(status_code).send({
-      status: status,
-      message: message,
-      data: data,
+const count = async (req, res, next) => {
+  try {
+    const result = await CountAll(req);
+
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-  };
-
-  module.exports = {
-    CountDocument
+  } catch (error) {
+    next(error);
   }
-  
+};
+
+module.exports = {
+  count,
+};

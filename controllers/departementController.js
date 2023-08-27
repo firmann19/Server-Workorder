@@ -1,81 +1,70 @@
-const DepartementService = require("../services/departementService");
+const { StatusCodes } = require("http-status-codes");
+const {
+  createDepartement,
+  getAllDepartement,
+  getOneDepartement,
+  updateDepartement,
+  deleteDepartement,
+} = require("../services/departementService");
 
 const create = async (req, res, next) => {
-  const { nama } = req.body;
+  try {
+    const result = await createDepartement(req);
 
-  const { status, status_code, message, data } =
-    await DepartementService.create({
-      nama,
+    res.status(StatusCodes.CREATED).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const getAll = async (req, res, next) => {
-  const {  } = req.body;
+const index = async (req, res, next) => {
+  try {
+    const result = await getAllDepartement(req);
 
-  const { status, status_code, message, data } =
-    await DepartementService.getAll({
-      
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const getById = async (req, res, next) => {
-  const { id } = req.params;
+const getOne = async (req, res, next) => {
+  try {
+    const result = await getOneDepartement(req);
 
-  const { status, status_code, message, data } =
-    await DepartementService.getDepartementById({
-      id,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const update = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const result = await updateDepartement(req);
 
-  const { nama } = req.body;
-
-  const { status, status_code, message, data } =
-    await DepartementService.updateDepartement({
-      id,
-      nama,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const deleteById = async (req, res, next) => {
-  const { id } = req.params;
+const destroy = async (req, res, next) => {
+  try {
+    const result = await deleteDepartement(req);
 
-  const { status, status_code, message, data } =
-    await DepartementService.deleteDepartement({
-      id,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-module.exports = { create, getAll, getById, update, deleteById };
+module.exports = { create, index, getOne, update, destroy };

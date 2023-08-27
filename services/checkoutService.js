@@ -1,341 +1,220 @@
 const CheckoutRepository = require("../repositories/checkoutRepository");
 const { verifMail, DiketahuiWO } = require("./mail");
 const { Checkout, User, Departement } = require("../models");
+const { NotFoundError, BadRequestError } = require("../errors");
 
-const getPagination = (page, size) => {
-  const limit = size ? +size : 3;
-  const offset = page ? page * limit : 0;
+module.exports = {
+  createCheckout: async (req, res) => {
+    const {
+      namaBarang,
+      kodeBarang,
+      permasalahan,
+      tindakan,
+      gantiSparepart,
+      UserRequestId,
+      DepartUserId,
+      UserApproveId,
+      StatusWO,
+    } = req.body;
 
-  return { limit, offset };
-};
-
-const getPagingData = (data, page, limit) => {
-  const { count: totalItems, rows: checkouts } = data;
-  const currentPage = page ? +page : 0;
-  const totalPages = Math.ceil(totalItems / limit);
-
-  return { totalItems, checkouts, totalPages, currentPage };
-};
-
-class CheckoutService {
-  static async create({
-    namaBarang,
-    kodeBarang,
-    permasalahan,
-    tindakan,
-    gantiSparepart,
-    UserRequestId,
-    DepartUserId,
-    UserApproveId,
-    StatusWO,
-  }) {
-    try {
-      const getEmail = await CheckoutRepository.getEmail({ UserApproveId });
-
-      const createdCheckout = await CheckoutRepository.create({
-        namaBarang,
-        kodeBarang,
-        permasalahan,
-        tindakan,
-        gantiSparepart,
-        UserRequestId,
-        DepartUserId,
-        UserApproveId,
-        StatusWO,
-        otp: Math.floor(Math.random() * 9999),
-        date_requestWO: new Date(),
-      });
-
-      await verifMail(getEmail, createdCheckout);
-
-      return {
-        status: true,
-        status_code: 201,
-        message: "Post created successfully",
-        data: {
-          created_checkout: createdCheckout,
-        },
-      };
-    } catch (error) {
-      console.log(error);
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          created_checkout: null,
-        },
-      };
+    //Cek kondisi request body
+    if (!namaBarang) {
+      throw new BadRequestError("Mohon Input Nama Peralatan");
+    } else if (!kodeBarang) {
+      throw new BadRequestError("Mohon Input Kode Peralatan");
+    } else if (!permasalahan) {
+      throw new BadRequestError("Mohon Input Permasalahan");
+    } else if (!UserApproveId) {
+      throw new BadRequestError("Mohon Input User Approve");
     }
-  }
 
-  /* static async getAll(req) {
-    try {
-      const { size = 5, page = 0 } = req.query;
+    const getEmail = await CheckoutRepository.getEmail({ UserApproveId });
 
-      const { limit, offset } = getPagination(page, size);
+    const createCheckout = await Checkout.create({
+      namaBarang,
+      kodeBarang,
+      permasalahan,
+      tindakan,
+      gantiSparepart,
+      UserRequestId,
+      DepartUserId,
+      UserApproveId,
+      StatusWO,
+      otp: Math.floor(Math.random() * 9999),
+      date_requestWO: new Date(),
+    });
 
-      const data = await Checkout.findAndCountAll({
-        limit,
-        offset,
-        include: [
-          {
-            model: User,
-            attributes: ["name", "id"],
-          },
-          {
-            model: Departement,
-            attributes: ["nama", "id"],
-          },
-        ],
-      });
-      const response = getPagingData(data, page, limit);
-      console.log(response);
-      return response;
-    } catch (error) {
-      console.log(error);
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          getAll_checkout: null,
+    await verifMail(getEmail, createCheckout);
+
+    return createCheckout;
+  },
+
+  getAllCheckout: async (req, res) => {
+    const result = await Checkout.findAll({
+      include: [
+        {
+          model: Departement,
+          attributes: ["nama", "id"],
         },
-      };
+        {
+          model: User,
+          as: "userRequest",
+          attributes: ["name", "id"],
+        },
+      ],
+    });
+
+    return result;
+  },
+
+  getOneCheckout: async (req, res) => {
+    const { id } = req.params;
+
+    const result = await Checkout.findOne({
+      where: { id },
+      include: [
+        {
+          model: User,
+          as: "userRequest",
+          attribubtes: ["name", "id"],
+        },
+        {
+          model: User,
+          as: "userApprove",
+          attribubtes: ["name", "id"],
+        },
+        {
+          model: User,
+          as: "userIT",
+          attribubtes: ["name", "id"],
+        },
+        {
+          model: User,
+          as: "HeadIT",
+          attribubtes: ["name", "id"],
+        },
+        {
+          model: Departement,
+          attribubtes: ["nama", "id"],
+        },
+      ],
+    });
+
+    if (!result)
+      throw new NotFoundError(`Tidak ada Checkout dengan id :  ${id}`);
+
+    return result;
+  },
+
+  updateCheckout: async (req, res) => {
+    const { id } = req.params;
+
+    const { tindakan, gantiSparepart, User_IT, HeadITid } = req.body;
+
+    //Cek kondisi request body
+    if (!tindakan) {
+      throw new BadRequestError("Mohon Input Nama Peralatan");
+    } else if (!gantiSparepart) {
+      throw new BadRequestError("Mohon Input Kode Peralatan");
     }
-  } */
 
-  static async getAll() {
-    try {
-      const getAllCheckout = await Checkout.findAll({
-        include: [
-          {
-            model: Departement,
-            attributes: ["nama", "id"],
-          },
-          {
-            model: User,
-            as: "userRequest",
-            attributes: ["name", "id"]
+    const getEmailHeadIT = await CheckoutRepository.getEmailHeadIT({
+      HeadITid,
+    });
 
-          }
-        ],
-      });
+    const check = await Checkout.findOne({ where: { id } });
 
-      return {
-        status: true,
-        status_code: 200,
-        message: "Get All successfully",
-        data: {
-          getAll_checkout: getAllCheckout,
-        },
-      };
-    } catch (error) {
-      console.log(error)
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          getAll_checkout: null,
-        },
-      };
-    }
-  }
+    if (!check)
+      throw new NotFoundError(`Tidak ada checkout dengan id :  ${id}`);
 
-  static async getCheckoutById({ id }) {
-    try {
-      const getCheckoutById = await CheckoutRepository.getById({
-        id
-      });
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "Get By Id successfully",
-        data: {
-          getCheckout_ById: getCheckoutById,
-        },
-      };
-    } catch (error) {
-      console.log(error)
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          getCheckout_ById: null,
-        },
-      };
-    }
-  }
-
-  static async updateCheckout({
-    id,
-    tindakan,
-    gantiSparepart,
-    User_IT,
-    HeadITid,
-  }) {
-    try {
-      // Melakukan check terhadap email
-      const Check = await CheckoutRepository.getById({ id });
-
-      const getEmailHeadIT = await CheckoutRepository.getEmailHeadIT({
-        HeadITid,
-      });
-
-      // Jika input Id salah, maka akan memberikan message "id salah"
-      if (!Check) {
-        return {
-          status: false,
-          status_code: 400,
-          message: "Id Salah",
-          data: {
-            registered_user: null,
-          },
-        };
-      }
-
-      const updateCheckout = await CheckoutRepository.updateCheckout({
-        id,
+    const result = await Checkout.update(
+      {
         tindakan,
         gantiSparepart,
         User_IT,
         HeadITid,
         date_completionWO: new Date(),
-      });
-      await DiketahuiWO(getEmailHeadIT, updateCheckout);
+      },
+      { where: { id } }
+    );
 
-      return {
-        status: true,
-        status_code: 200,
-        message: "update departement successfully",
-        data: {
-          update_Checkout: updateCheckout,
-        },
-      };
-    } catch (error) {
-      console.log(error);
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          update_Checkout: null,
-        },
-      };
-    }
-  }
+    await DiketahuiWO(getEmailHeadIT, result);
 
-  static async deleteCheckout({ id }) {
-    try {
-      const deletedCheckout = await CheckoutRepository.deleteById({
-        id,
-      });
+    return result;
+  },
 
-      return {
-        status: true,
-        status_code: 200,
-        message: "delete departement successfully",
-        data: {
-          delete_Checkout: deletedCheckout,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          delete_Checkout: null,
-        },
-      };
-    }
-  }
+  deleteCheckout: async (req, res) => {
+    const { id } = req.params;
 
-  static async changeStatusWO({ id, otp}) {
-    try {
-      const statusWO = await CheckoutRepository.statusWorkOrder({
-        id,
+    const result = await Checkout.destroy({
+      where: { id },
+    });
+
+    if (!result)
+      throw new NotFoundError(`Tidak ada Checkout dengan id :  ${id}`);
+
+    return result;
+  },
+
+  changeStatusWo: async (req, res) => {
+    const { id } = req.params;
+
+    const { otp } = req.body;
+
+    const check = await Checkout.findOne({ id });
+
+    if (check) throw new NotFoundError(`Tidak ada checkout dengan id :  ${id}`);
+
+    const result = await Checkout.update(
+      {
+        where: { id },
+      },
+      {
         otp,
         StatusWO: "Approve",
-      });
+      }
+    );
 
-      return {
-        status: true,
-        status_code: 200,
-        message: "status Work Order successfully",
-        data: {
-          status_WO: statusWO,
-        },
-      };
-    } catch (error) {
-      console.log(error);
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          statusWO: null,
-        },
-      };
-    }
-  }
+    return result;
+  },
 
-  static async changeStatusPengerjaan({ id, StatusPengerjaan }) {
-    try {
-      const statusPengerjaan = await CheckoutRepository.statusPengerjaan({
-        id,
+  changeStatusPengerjaan: async (req, res) => {
+    const { id } = req.params;
+
+    const { StatusPengerjaan } = req.body;
+
+    const check = await Checkout.findOne({ id });
+
+    if (check) throw new NotFoundError(`Tidak ada checkout dengan id :  ${id}`);
+
+    const result = await Checkout.update(
+      {
+        where: { id },
+      },
+      {
         StatusPengerjaan,
-      });
+      }
+    );
 
-      return {
-        status: true,
-        status_code: 200,
-        message: "status Pengerjaan successfully",
-        data: {
-          status_Pengerjaan: statusPengerjaan,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          statusPengerjaan: null,
-        },
-      };
-    }
-  }
+    return result;
+  },
 
-  static async changeStatusProgress({ id }) {
-    try {
-      const statusPengerjaan = await CheckoutRepository.statusPengerjaan({
-        id,
-        StatusPengerjaan : "Close",
-      });
+  changeStatusProgress: async (req, res) => {
+    const { id } = req.params;
 
-      return {
-        status: true,
-        status_code: 200,
-        message: "Work Order Telah Selesai",
-        data: {
-          status_Pengerjaan: statusPengerjaan,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          statusPengerjaan: null,
-        },
-      };
-    }
-  }
-}
+    const check = await Checkout.findOne({ id });
 
-module.exports = CheckoutService;
+    if (check) throw new NotFoundError(`Tidak ada checkout dengan id :  ${id}`);
+
+    const result = await Checkout.update(
+      {
+        where: { id },
+      },
+      {
+        StatusPengerjaan: "Close",
+      }
+    );
+
+    return result;
+  },
+};

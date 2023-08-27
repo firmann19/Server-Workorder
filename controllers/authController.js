@@ -1,145 +1,106 @@
-const AuthService = require("../services/authService");
+const { StatusCodes } = require("http-status-codes");
+const {
+  signIn,
+  signUp,
+  getAllUser,
+  getOneUser,
+  updateUser,
+  deleteUser,
+  getAllApprove,
+} = require("../services/authService");
 
-const register = async (req, res) => {
-  const { name, email, posisiId, password, roles, DepartementId, GroupId } =
-    req.body;
+const register = async (req, res, next) => {
+  try {
+    const result = await signUp(req);
 
-  const { status, status_code, message, data } = await AuthService.register({
-    name,
-    email,
-    posisiId,
-    password,
-    roles,
-    DepartementId,
-    GroupId,
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
-};
-
-const login = async (req, res) => {
-  const { email, password, DepartementId } = req.body;
-
-  const { status, status_code, message, data } = await AuthService.login({
-    email,
-    password,
-    DepartementId,
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
-};
-
-const getAllApprove = async (req, res, next) => {
-  const { name, email, posisiId, password, roles, DepartementId, GroupId } =
-    req.user;
-
-  console.log(req.user);
-
-  const { status, status_code, message, data } =
-    await AuthService.getAllApproveUsers({
-      name,
-      email,
-      posisiId,
-      password,
-      roles,
-      DepartementId,
-      GroupId,
+    res.status(StatusCodes.CREATED).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const getAll = async (req, res, next) => {
-  const { name, email, posisiId, password, roles, DepartementId, GroupId } =
-    req.body;
+const login = async (req, res, next) => {
+  try {
+    const result = await signIn(req);
 
-  const { status, status_code, message, data } = await AuthService.getAll({
-    name,
-    email,
-    posisiId,
-    password,
-    roles,
-    DepartementId,
-    GroupId,
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+    res.status(StatusCodes.CREATED).json({
+      data: result,
+    });
+  } catch (error) {
+    console.log(error)
+    next(error);
+  }
 };
 
-const getById = async (req, res, next) => {
-  const { id } = req.params;
+const index = async (req, res, next) => {
+  try {
+    const result = await getAllUser(req);
 
-  const { status, status_code, message, data } = await AuthService.getUserById({
-    id,
-  });
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+const indexApprove = async (req, res, next) => {
+  try {
+    const result = await getAllApprove(req);
+
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getOne = async (req, res, next) => {
+  try {
+    const result = await getOneUser(req);
+
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const update = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const result = await updateUser(req);
 
-  const { name, email, posisiId, password, roles, DepartementId, GroupId } =
-    req.body;
-
-  const { status, status_code, message, data } = await AuthService.updateUser({
-    id,
-    name,
-    email,
-    posisiId,
-    password,
-    roles,
-    DepartementId,
-    GroupId,
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const deleteById = async (req, res, next) => {
-  const { id } = req.params;
+const destroy = async (req, res, next) => {
+  try {
+    const result = await deleteUser(req);
 
-  const { status, status_code, message, data } = await AuthService.deleteUser({
-    id,
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    console.log(error)
+    next(error);
+  }
 };
 
 module.exports = {
-  register,
   login,
-  getAll,
-  getById,
+  register,
+  index,
+  indexApprove,
+  getOne,
   update,
-  deleteById,
-  getAllApprove,
+  destroy,
 };

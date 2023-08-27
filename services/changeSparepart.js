@@ -1,23 +1,107 @@
+const { NotFoundError } = require("../errors");
+const { ChangeSparepart } = require("../models");
 const ChangeSparepartRepository = require("../repositories/changeSparepart");
 const { ApproveSparepart } = require("./mail");
 
-class ChangeSparepartService {
-  static async create({
-    userRequestWo,
-    departementUser,
-    namaSparepart,
-    harga,
-    jumlahOrder,
-    alasan,
-    statusPengajuan,
-    HeadIT,
-  }) {
-    try {
-      const getEmail = await ChangeSparepartRepository.getEmailHeadIT({
-        HeadIT,
-      });
+module.exports = {
+  createChangeSparepart: async (req, res) => {
+    const {
+      userRequestWo,
+      departementUser,
+      namaSparepart,
+      harga,
+      jumlahOrder,
+      alasan,
+      statusPengajuan,
+      HeadIT,
+    } = req.body;
 
-      const createdChangeSparepart = await ChangeSparepartRepository.create({
+    //Cek kondisi
+    if (!namaSparepart) {
+      throw new BadRequestError("Nama belum di input");
+    } else if (!harga) {
+      throw new BadRequestError("Email belum di input");
+    } else if (!jumlahOrder) {
+      throw new BadRequestError("Posisi belum di input");
+    } else if (!alasan) {
+      throw new BadRequestError("Role belum di input");
+    } else if (!statusPengajuan) {
+      throw new BadRequestError("Password belum di input");
+    }
+
+    const getEmail = await ChangeSparepartRepository.getEmailHeadIT({
+      HeadIT,
+    });
+
+    const createChangeSparepart = await ChangeSparepart.create({
+      userRequestWo,
+      departementUser,
+      namaSparepart,
+      harga,
+      jumlahOrder,
+      alasan,
+      statusPengajuan,
+      HeadIT,
+    });
+
+    await ApproveSparepart(getEmail, createChangeSparepart);
+
+    return createChangeSparepart;
+  },
+
+  getAllChangeSparepart: async (req, res) => {
+    const result = await ChangeSparepart.findAll();
+
+    return result;
+  },
+
+  getOneChangeSparepart: async (req, res) => {
+    const { id } = req.params;
+
+    const result = await ChangeSparepart.findOne({
+      where: { id },
+    });
+
+    if (!result)
+      throw new NotFoundError(`Tidak ada ChangeSparepart dengan id :  ${id}`);
+
+    return result;
+  },
+
+  updateChangeSparepart: async (req, res) => {
+    const { id } = req.params;
+
+    const {
+      userRequestWo,
+      departementUser,
+      namaSparepart,
+      harga,
+      jumlahOrder,
+      alasan,
+      statusPengajuan,
+      HeadIT,
+    } = req.body;
+
+    //Cek kondisi
+    if (!namaSparepart) {
+      throw new BadRequestError("Nama belum di input");
+    } else if (!harga) {
+      throw new BadRequestError("Email belum di input");
+    } else if (!jumlahOrder) {
+      throw new BadRequestError("Posisi belum di input");
+    } else if (!alasan) {
+      throw new BadRequestError("Role belum di input");
+    } else if (!statusPengajuan) {
+      throw new BadRequestError("Password belum di input");
+    }
+
+    const check = await ChangeSparepart.findOne({ where: { id } });
+
+    if (!check)
+      throw new NotFoundError(`Tidak ada departement dengan id :  ${id}`);
+
+    const result = await ChangeSparepart.update(
+      {
         userRequestWo,
         departementUser,
         namaSparepart,
@@ -26,198 +110,40 @@ class ChangeSparepartService {
         alasan,
         statusPengajuan,
         HeadIT,
-      });
+      },
+      { where: { id } }
+    );
+    return result;
+  },
 
-      await ApproveSparepart(getEmail, createdChangeSparepart);
+  deleteChangeSparepart: async (req, res) => {
+    const { id } = req.params;
 
-      return {
-        status: true,
-        status_code: 201,
-        message: "create ChangeSparepart successfully",
-        data: {
-          created_ChangeSparepart: createdChangeSparepart,
-        },
-      };
-    } catch (error) {
-      console.log(error);
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          created_ChangeSparepart: null,
-        },
-      };
-    }
-  }
+    const result = await ChangeSparepart.destroy({
+      where: { id },
+    });
 
-  static async getAll() {
-    try {
-      const getAllChangeSparepart =
-        await ChangeSparepartRepository.getAllChangeSparepart({});
+    if (!result)
+      throw new NotFoundError(`Tidak ada ChangeSparepart dengan id :  ${id}`);
 
-      return {
-        status: true,
-        status_code: 200,
-        message: "Get All successfully",
-        data: {
-          getAll_ChangeSparepart: getAllChangeSparepart,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          getAll_ChangeSparepart: null,
-        },
-      };
-    }
-  }
+    return result;
+  },
 
-  static async getChangeSparepartById({ id }) {
-    try {
-      const getChangeSparepartById = await ChangeSparepartRepository.getById({
-        id,
-      });
+  changeStatusPengajuan: async (req, res) => {
+    const { id } = req.params;
 
-      return {
-        status: true,
-        status_code: 200,
-        message: "Get By Id successfully",
-        data: {
-          getChangeSparepart_ById: getChangeSparepartById,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          getChangeSparepart_ById: null,
-        },
-      };
-    }
-  }
+    const check = await ChangeSparepart.findOne({ id });
 
-  static async updateChangeSparepart({
-    id,
-    userRequestWo,
-    departementUser,
-    namaSparepart,
-    harga,
-    jumlahOrder,
-    alasan,
-    statusPengajuan,
-    HeadIT,
-  }) {
-    try {
-      // Melakukan check terhadap email
-      const Check = await ChangeSparepartRepository.getById({ id });
+    if (check)
+      throw new NotFoundError(`Tidak ada departement dengan id :  ${id}`);
 
-      // Jika input Id salah, maka akan memberikan message "id salah"
-      if (!Check) {
-        return {
-          status: false,
-          status_code: 400,
-          message: "Id Salah",
-          data: {
-            user_Id: null,
-          },
-        };
-      }
+    const result = await ChangeSparepart.update(
+      {
+        statusPengajuan,
+      },
+      { where: { id } }
+    );
 
-      const updateChangeSparepart =
-        await ChangeSparepartRepository.updateChangeSparepart({
-          id,
-          userRequestWo,
-          departementUser,
-          namaSparepart,
-          harga,
-          jumlahOrder,
-          alasan,
-          statusPengajuan,
-          HeadIT,
-        });
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "update changeSparepart successfully",
-        data: {
-          update_ChangeSparepart: updateChangeSparepart,
-        },
-      };
-    } catch (error) {
-      console.log(error);
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          update_ChangeSparepart: null,
-        },
-      };
-    }
-  }
-
-  static async deleteChangeSparepart({ id }) {
-    try {
-      const deletedChangeSparepart = await ChangeSparepartRepository.deleteById(
-        {
-          id,
-        }
-      );
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "delete changeSparepart successfully",
-        data: {
-          delete_ChangeSparepart: deletedChangeSparepart,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          delete_ChangeSparepart: null,
-        },
-      };
-    }
-  }
-
-  static async changeStatusPengajuan({ id, statusPengajuan }) {
-    try {
-      const statusPengajuanSparepart =
-        await ChangeSparepartRepository.updateStatus({
-          id,
-          statusPengajuan,
-        });
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "status Pengerjaan successfully",
-        data: {
-          status_PengajuanSparepart: statusPengajuanSparepart,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          statusPengajuanSparepart: null,
-        },
-      };
-    }
-  }
-}
-
-module.exports = ChangeSparepartService;
+    return result;
+  },
+};

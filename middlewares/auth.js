@@ -1,4 +1,4 @@
-const UnauthorizedError = require("../helpers/unauthorized");
+const UnauthorizedError = require("../errors/unauthorized");
 const { isTokenValid } = require("../utils/jwt");
 
 const authenticateUser = async (req, res, next) => {

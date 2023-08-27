@@ -1,149 +1,69 @@
-const PosisiRepository = require("../repositories/posisiRepository");
+const { NotFoundError } = require("../errors");
+const { Posisi } = require("../models");
 
-class PosisiService {
-  static async create({ jabatan }) {
-    try {
-      const createdPosisi = await PosisiRepository.create({
+module.exports = {
+  createPosisi: async (req, res) => {
+    const { jabatan } = req.body;
+
+    if (!jabatan) {
+      throw new BadRequestError("Posisi belum di input");
+    }
+
+    const createPosisi = await Posisi.create({
+      jabatan,
+    });
+    return createPosisi;
+  },
+
+  getAllPosisi: async (req, res) => {
+    const result = await Posisi.findAll();
+
+    return result;
+  },
+
+  getOnePosisi: async (req, res) => {
+    const { id } = req.params;
+
+    const result = await Posisi.findOne({
+      where: { id },
+    });
+
+    if (!result) throw new NotFoundError(`Tidak ada posisi dengan id :  ${id}`);
+
+    return result;
+  },
+
+  updatePosisi: async (req, res) => {
+    const { id } = req.params;
+
+    const { jabatan } = req.body;
+
+    if (!jabatan) {
+      throw new BadRequestError("Posisi belum di input");
+    }
+
+    const check = await Posisi.findOne({ where: { id } });
+
+    if (!check) throw new NotFoundError(`Tidak ada posisi dengan id :  ${id}`);
+
+    const result = await Posisi.update(
+      {
         jabatan,
-      });
+      },
+      { where: { id } }
+    );
+    return result;
+  },
 
-      return {
-        status: true,
-        status_code: 201,
-        message: "created posisi successfully",
-        data: {
-          created_posisi: createdPosisi,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          created_posisi: null,
-        },
-      };
-    }
-  }
+  deletePosisi: async (req, res) => {
+    const { id } = req.params;
 
-  static async getAll() {
-    try {
-      const getAllPosisi = await PosisiRepository.getAllPosisi({});
+    const result = await Posisi.destroy({
+      where: { id },
+    });
 
-      return {
-        status: true,
-        status_code: 200,
-        message: "Get All successfully",
-        data: {
-          getAll_posisi: getAllPosisi,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          getAll_posisi: null,
-        },
-      };
-    }
-  }
+    if (!result) throw new NotFoundError(`Tidak ada posisi dengan id :  ${id}`);
 
-  static async getPosisiById({ id }) {
-    try {
-      const getPosisiById = await PosisiRepository.getById({
-        id,
-      });
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "Get By Id successfully",
-        data: {
-          getGroup_ById: getPosisiById,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          getPosisi_ById: null,
-        },
-      };
-    }
-  }
-
-  static async updatePosisi({ id, jabatan }) {
-    try {
-      // Melakukan check terhadap email
-      const Check = await PosisiRepository.getById({ id });
-
-      // Jika input Id salah, maka akan memberikan message "id salah"
-      if (!Check) {
-        return {
-          status: false,
-          status_code: 400,
-          message: "Id Salah",
-          data: {
-            registered_user: null,
-          },
-        };
-      }
-
-      const updatePosisi = await PosisiRepository.updatePosisi({
-        id,
-        jabatan,
-      });
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "update posisi successfully",
-        data: {
-          update_Posisi: updatePosisi,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          update_Posisi: null,
-        },
-      };
-    }
-  }
-
-  static async deletePosisi({ id }) {
-    try {
-      const deletedPosisi = await PosisiRepository.deleteById({
-        id,
-      });
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "delete group successfully",
-        data: {
-          delete_Posisi: deletedPosisi,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          delete_Posisi: null,
-        },
-      };
-    }
-  }
-}
-
-module.exports = PosisiService;
+    return result;
+  },
+};

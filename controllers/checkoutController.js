@@ -1,187 +1,119 @@
-const { getAllCheckout } = require("../repositories/checkoutRepository");
-const CheckoutService = require("../services/checkoutService");
+const { StatusCodes } = require("http-status-codes");
+const {
+  createCheckout,
+  getAllCheckout,
+  getOneCheckout,
+  updateCheckout,
+  deleteCheckout,
+  changeStatusWo,
+  changeStatusProgress,
+  changeStatusPengerjaan,
+} = require("../services/checkoutService");
 
 const create = async (req, res, next) => {
-  const {
-    namaBarang,
-    kodeBarang,
-    permasalahan,
-    tindakan,
-    gantiSparepart,
-    UserRequestId,
-    DepartUserId,
-    UserApproveId,
-    StatusWO,
-    otp,
-    date_requestWO,
-  } = req.body;
-
-  const { status, status_code, message, data } = await CheckoutService.create({
-    namaBarang,
-    kodeBarang,
-    permasalahan,
-    tindakan,
-    gantiSparepart,
-    UserRequestId,
-    DepartUserId,
-    UserApproveId,
-    StatusWO,
-    otp,
-    date_requestWO,
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
-};
-
-/* const getAll = async (req, res, next) => {
   try {
-    const result = await CheckoutService.getAll(req);
+    const result = await createCheckout(req);
 
-    res.status(200).send({
+    res.status(StatusCodes.CREATED).json({
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
-}; */
-
-const getAll = async (req, res, next) => {
-  const {} = req.body;
-
-  const { status, status_code, message, data } = await CheckoutService.getAll(
-    {}
-  );
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
 };
 
-const getById = async (req, res, next) => {
-  const { id } = req.params;
+const index = async (req, res, next) => {
+  try {
+    const result = await getAllCheckout(req);
 
-  const { status, status_code, message, data } =
-    await CheckoutService.getCheckoutById({
-      id,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
+  } catch (error) {
+    console.log(error)
+    next(error);
+  }
+};
 
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+const getOne = async (req, res, next) => {
+  try {
+    const result = await getOneCheckout(req);
+
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const update = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const result = await updateCheckout(req);
 
-  const {
-    tindakan,
-    gantiSparepart,
-    User_IT,
-    HeadITid,
-    date_completionWO,
-    Laporan,
-  } = req.body;
-
-  const { status, status_code, message, data } =
-    await CheckoutService.updateCheckout({
-      id,
-      tindakan,
-      gantiSparepart,
-      User_IT,
-      HeadITid,
-      date_completionWO,
-      Laporan,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const deleteById = async (req, res, next) => {
-  const { id } = req.params;
+const destroy = async (req, res, next) => {
+  try {
+    const result = await deleteCheckout(req);
 
-  const { status, status_code, message, data } =
-    await CheckoutService.deleteCheckout({
-      id,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const statusWO = async (req, res, next) => {
-  const { id } = req.params;
-  const { StatusWO, otp } = req.body;
+const StatusWO = async (req, res, next) => {
+  try {
+    const result = await changeStatusWo(req);
 
-  const { status, status_code, message, data } =
-    await CheckoutService.changeStatusWO({
-      id,
-      StatusWO,
-      otp,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const statusPengerjaan = async (req, res, next) => {
-  const { id } = req.params;
-  const { StatusPengerjaan } = req.body;
+const StatusProgress = async (req, res, next) => {
+  try {
+    const result = await changeStatusProgress(req);
 
-  const { status, status_code, message, data } =
-    await CheckoutService.changeStatusPengerjaan({
-      id,
-      StatusPengerjaan,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const statusProgressWO = async (req, res, next) => {
-  const { id } = req.params;
-  const { StatusPengerjaan } = req.body;
+const StatusPengerjaan = async (req, res, next) => {
+  try {
+    const result = await changeStatusPengerjaan(req);
 
-  const { status, status_code, message, data } =
-    await CheckoutService.changeStatusProgress({
-      id,
-      StatusPengerjaan,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {
   create,
-  getAll,
-  getById,
+  index,
+  getOne,
   update,
-  statusWO,
-  statusPengerjaan,
-  statusProgressWO,
-  deleteById,
+  destroy,
+  StatusWO,
+  StatusProgress,
+  StatusPengerjaan,
 };

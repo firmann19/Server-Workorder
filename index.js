@@ -15,28 +15,29 @@ const posisiController = require("./controllers/posisiController");
 const roleController = require("./controllers/roleController");
 const changeSparepartController = require("./controllers/changeSparepartController");
 const dashboardController = require("./controllers/DashboardController");
-
+const refreshToken = require("./controllers/refreshTokenController");
 
 // Import Middlewares
-const {
-  authenticateUser,
-  authorizeRoles,
-  authorizeHeadIT,
-} = require("./middlewares/auth");
+const { authenticateUser, authorizeRoles } = require("./middlewares/auth");
+const notFoundMiddleware = require("./middlewares/not-found");
+const handleErrorMiddleware = require("./middlewares/handler-error");
 
 app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "/public")));
+app.use(express.static(path.join(__dirname, "public")));
+
+//refreshToken
+app.get("refresh-token/:refreshToken", refreshToken.index);
 
 //ChangeSparepart
 app.get(
   "/api/v1/count",
   //authenticateUser,
   //authorizeRoles("Staff IT", "Manager IT"),
-  dashboardController.CountDocument
+  dashboardController.count
 );
 
 //ChangeSparepart
@@ -51,14 +52,14 @@ app.get(
   "/api/v1/changeSparepart",
   authenticateUser,
   authorizeRoles(2, 3),
-  changeSparepartController.getAll
+  changeSparepartController.index
 );
 
 app.get(
   "/api/v1/changeSparepart/:id",
   authenticateUser,
   authorizeRoles(2, 3),
-  changeSparepartController.getById
+  changeSparepartController.getOne
 );
 
 app.put(
@@ -72,14 +73,14 @@ app.delete(
   "/api/v1/changeSparepart/:id",
   authenticateUser,
   authorizeRoles(2, 3),
-  changeSparepartController.deleteById
+  changeSparepartController.destroy
 );
 
 app.put(
   "/api/v1/changeStatus/:id",
   authenticateUser,
   authorizeRoles(3),
-  changeSparepartController.statusPengajuan
+  changeSparepartController.changeStatus
 );
 
 //Checkout
@@ -94,14 +95,14 @@ app.get(
   "/api/v1/checkout",
   authenticateUser,
   authorizeRoles(1, 2, 3),
-  checkoutController.getAll
+  checkoutController.index
 );
 
 app.get(
   "/api/v1/checkout/:id",
   authenticateUser,
   authorizeRoles(1, 2, 3),
-  checkoutController.getById
+  checkoutController.getOne
 );
 
 app.put(
@@ -114,23 +115,23 @@ app.put(
 app.delete(
   "/api/v1/checkout/:id",
   authenticateUser,
-  checkoutController.deleteById
+  checkoutController.destroy
 );
 
-app.put("/api/v1/statusWO/:id", authenticateUser, checkoutController.statusWO);
+app.put("/api/v1/statusWO/:id", authenticateUser, checkoutController.StatusWO);
 
 app.put(
   "/api/v1/statusPengerjaan/:id",
   authenticateUser,
   authorizeRoles(2),
-  checkoutController.statusPengerjaan
+  checkoutController.StatusPengerjaan
 );
 
 app.put(
   "/api/v1/statusProgress/:id",
   authenticateUser,
   authorizeRoles(3),
-  checkoutController.statusProgressWO
+  checkoutController.StatusProgress
 );
 
 //User
@@ -142,21 +143,21 @@ app.get(
   "/api/v1/user",
   authenticateUser,
   authorizeRoles(2, 3),
-  authController.getAll
+  authController.index
 );
 
 app.get(
   "/api/v1/getAllApprove",
   authenticateUser,
   authorizeRoles(1, 2, 3),
-  authController.getAllApprove
+  authController.indexApprove
 );
 
 app.get(
   "/api/v1/user/:id",
   authenticateUser,
   authorizeRoles(1, 2, 3),
-  authController.getById
+  authController.getOne
 );
 
 app.put(
@@ -170,7 +171,7 @@ app.delete(
   "/api/v1/user/:id",
   authenticateUser,
   authorizeRoles(2, 3),
-  authController.deleteById
+  authController.destroy
 );
 
 //Departement
@@ -185,14 +186,14 @@ app.get(
   "/api/v1/departement",
   authenticateUser,
   authorizeRoles(2, 3),
-  departementController.getAll
+  departementController.index
 );
 
 app.get(
   "/api/v1/departement/:id",
   authenticateUser,
   authorizeRoles(2, 3),
-  departementController.getById
+  departementController.getOne
 );
 
 app.put(
@@ -206,7 +207,7 @@ app.delete(
   "/api/v1/departement/:id",
   authenticateUser,
   authorizeRoles(2, 3),
-  departementController.deleteById
+  departementController.destroy
 );
 
 //Group
@@ -221,14 +222,14 @@ app.get(
   "/api/v1/group",
   authenticateUser,
   authorizeRoles(2, 3),
-  groupController.getAll
+  groupController.index
 );
 
 app.get(
   "/api/v1/group/:id",
   authenticateUser,
   authorizeRoles(2, 3),
-  groupController.getById
+  groupController.getOne
 );
 
 app.put(
@@ -242,30 +243,34 @@ app.delete(
   "/api/v1/group/:id",
   authenticateUser,
   authorizeRoles(3, 2),
-  groupController.deleteById
+  groupController.destroy
 );
 
 //Posisi
 app.post("/api/v1/posisi", posisiController.create);
 
-app.get("/api/v1/posisi", posisiController.getAll);
+app.get("/api/v1/posisi", posisiController.index);
 
-app.get("/api/v1/posisi/:id", posisiController.getById);
+app.get("/api/v1/posisi/:id", posisiController.getOne);
 
 app.put("/api/v1/posisi/:id", posisiController.update);
 
-app.delete("/api/v1/posisi/:id", posisiController.deleteById);
+app.delete("/api/v1/posisi/:id", posisiController.destroy);
 
 //Role
 app.post("/api/v1/role", roleController.create);
 
-app.get("/api/v1/role", roleController.getAll);
+app.get("/api/v1/role", roleController.index);
 
-app.get("/api/v1/role/:id", roleController.getById);
+app.get("/api/v1/role/:id", roleController.getOne);
 
 app.put("/api/v1/role/:id", roleController.update);
 
-app.delete("/api/v1/role/:id", roleController.deleteById);
+app.delete("/api/v1/role/:id", roleController.destroy);
+
+//middlewares
+app.use(notFoundMiddleware);
+app.use(handleErrorMiddleware);
 
 // Public File Access
 

@@ -1,151 +1,69 @@
-const GroupRepository = require("../repositories/groupsRepository");
+const { NotFoundError } = require("../errors");
+const { Group } = require("../models");
 
-class DepartementService {
-  static async create({ nama }) {
-    try {
-      const createdGroup = await GroupRepository.create({
+module.exports = {
+  createGroup: async (req, res) => {
+    const { nama } = req.body;
+
+    if (!nama) {
+      throw new BadRequestError("Nama Group belum di input");
+    }
+
+    const createGroup = await Group.create({
+      nama,
+    });
+    return createGroup;
+  },
+
+  getAllGroup: async (req, res) => {
+    const result = await Group.findAll();
+
+    return result;
+  },
+
+  getOneGroup: async (req, res) => {
+    const { id } = req.params;
+
+    const result = await Group.findOne({
+      where: { id },
+    });
+
+    if (!result) throw new NotFoundError(`Tidak ada group dengan id :  ${id}`);
+
+    return result;
+  },
+
+  updateGroup: async (req, res) => {
+    const { id } = req.params;
+
+    const { nama } = req.body;
+
+    if (!nama) {
+      throw new BadRequestError("Nama Group belum di input");
+    }
+
+    const check = await Group.findOne({ where: { id } });
+
+    if (!check) throw new NotFoundError(`Tidak ada group dengan id :  ${id}`);
+
+    const result = await Group.update(
+      {
         nama,
-      });
+      },
+      { where: { id } }
+    );
+    return result;
+  },
 
-      return {
-        status: true,
-        status_code: 201,
-        message: "created group successfully",
-        data: {
-          created_group: createdGroup,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          created_group: null,
-        },
-      };
-    }
-  }
+  deleteGroup: async (req, res) => {
+    const { id } = req.params;
 
-  static async getAll() {
-    try {
-      const getAllGroup = await GroupRepository.getAllGroup({
-        
-      });
+    const result = await Group.destroy({
+      where: { id },
+    });
 
-      return {
-        status: true,
-        status_code: 200,
-        message: "Get All successfully",
-        data: {
-          getAll_group: getAllGroup,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          getAll_group: null,
-        },
-      };
-    }
-  }
+    if (!result) throw new NotFoundError(`Tidak ada group dengan id :  ${id}`);
 
-  static async getGroupById({ id }) {
-    try {
-      const getGroupById = await GroupRepository.getById({
-        id,
-      });
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "Get By Id successfully",
-        data: {
-          getGroup_ById: getGroupById,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          getGroup_ById: null,
-        },
-      };
-    }
-  }
-
-  static async updateGroup({ id, nama }) {
-    try {
-      // Melakukan check terhadap email
-      const Check = await GroupRepository.getById({ id });
-
-      // Jika input Id salah, maka akan memberikan message "id salah"
-      if (!Check) {
-        return {
-          status: false,
-          status_code: 400,
-          message: "Id Salah",
-          data: {
-            registered_user: null,
-          },
-        };
-      }
-
-      const updateGroup = await GroupRepository.updateGroup({
-        id,
-        nama,
-      });
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "update departement successfully",
-        data: {
-          update_Group: updateGroup,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          update_Group: null,
-        },
-      };
-    }
-  }
-
-  static async deleteGroup({ id }) {
-    try {
-      const deletedGroup = await GroupRepository.deleteById({
-        id,
-      });
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "delete group successfully",
-        data: {
-          delete_Group: deletedGroup,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          delete_Group: null,
-        },
-      };
-    }
-  }
-}
-
-module.exports = DepartementService;
+    return result;
+  },
+};

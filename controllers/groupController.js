@@ -1,81 +1,70 @@
-const GroupService = require("../services/groupService");
+const { StatusCodes } = require("http-status-codes");
+const {
+  createGroup,
+  getAllGroup,
+  getOneGroup,
+  updateGroup,
+  deleteGroup,
+} = require("../services/groupService");
 
 const create = async (req, res, next) => {
-  const { nama } = req.body;
+  try {
+    const result = await createGroup(req);
 
-  const { status, status_code, message, data } = await GroupService.create({
-    nama,
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
-};
-
-const getAll = async (req, res, next) => {
-  const {  } = req.body;
-
-  const { status, status_code, message, data } = await GroupService.getAll({
-    
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
-};
-
-const getById = async (req, res, next) => {
-  const { id } = req.params;
-
-  const { status, status_code, message, data } =
-    await GroupService.getGroupById({
-      id,
+    res.status(StatusCodes.CREATED).json({
+      data: result,
     });
+  } catch (error) {
+    next(error);
+  }
+};
 
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+const index = async (req, res, next) => {
+  try {
+    const result = await getAllGroup(req);
+
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getOne = async (req, res, next) => {
+  try {
+    const result = await getOneGroup(req);
+
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const update = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const result = await updateGroup(req);
 
-  const { nama } = req.body;
-
-  const { status, status_code, message, data } = await GroupService.updateGroup(
-    {
-      id,
-      nama,
-    }
-  );
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const deleteById = async (req, res, next) => {
-  const { id } = req.params;
+const destroy = async (req, res, next) => {
+  try {
+    const result = await deleteGroup(req);
 
-  const { status, status_code, message, data } = await GroupService.deleteGroup(
-    {
-      id,
-    }
-  );
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-module.exports = { create, getAll, getById, update, deleteById };
+module.exports = { create, index, getOne, update, destroy };

@@ -1,151 +1,72 @@
-const DepartementRepository = require("../repositories/departementRepository");
+const { NotFoundError, BadRequestError } = require("../errors");
+const { Departement } = require("../models");
 
-class DepartementService {
-  static async create({ nama }) {
-    try {
-      const createdDepartement = await DepartementRepository.create({
+module.exports = {
+  createDepartement: async (req, res) => {
+    const { nama } = req.body;
+
+    if (!nama) {
+      throw new BadRequestError("Nama Departement belum di input");
+    }
+
+    const createGroup = await Departement.create({
+      nama,
+    });
+    return createGroup;
+  },
+
+  getAllDepartement: async (req, res) => {
+    const result = await Departement.findAll();
+
+    return result;
+  },
+
+  getOneDepartement: async (req, res) => {
+    const { id } = req.params;
+
+    const result = await Departement.findOne({
+      where: { id },
+    });
+
+    if (!result)
+      throw new NotFoundError(`Tidak ada departement dengan id :  ${id}`);
+
+    return result;
+  },
+
+  updateDepartement: async (req, res) => {
+    const { id } = req.params;
+
+    const { nama } = req.body;
+
+    if (!nama) {
+      throw new BadRequestError("Nama Departement belum di input");
+    }
+
+    const check = await Departement.findOne({ where: { id } });
+
+    if (!check)
+      throw new NotFoundError(`Tidak ada departement dengan id :  ${id}`);
+
+    const result = await Departement.update(
+      {
         nama,
-      });
+      },
+      { where: { id } }
+    );
+    return result;
+  },
 
-      return {
-        status: true,
-        status_code: 201,
-        message: "create Departement successfully",
-        data: {
-          created_departement: createdDepartement,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          created_departement: null,
-        },
-      };
-    }
-  }
+  deleteDepartement: async (req, res) => {
+    const { id } = req.params;
 
-  static async getAll() {
-    try {
-      const getAllDepartement = await DepartementRepository.getAllDepartement({
-        
-      });
+    const result = await Departement.destroy({
+      where: { id },
+    });
 
-      return {
-        status: true,
-        status_code: 200,
-        message: "Get All successfully",
-        data: {
-          getAll_departement: getAllDepartement,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          getAll_departement: null,
-        },
-      };
-    }
-  }
+    if (!result)
+      throw new NotFoundError(`Tidak ada departement dengan id :  ${id}`);
 
-  static async getDepartementById({ id }) {
-    try {
-      const getDepartementById = await DepartementRepository.getById({
-        id,
-      });
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "Get By Id successfully",
-        data: {
-          getDepartement_ById: getDepartementById,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          getDepartement_ById: null,
-        },
-      };
-    }
-  }
-
-  static async updateDepartement({ id, nama }) {
-    try {
-      // Melakukan check terhadap email
-      const Check = await DepartementRepository.getById({ id });
-
-      // Jika input Id salah, maka akan memberikan message "id salah"
-      if (!Check) {
-        return {
-          status: false,
-          status_code: 400,
-          message: "Id Salah",
-          data: {
-            registered_user: null,
-          },
-        };
-      }
-
-      const updateDepartement = await DepartementRepository.updateDepartement({
-        id,
-        nama,
-      });
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "update departement successfully",
-        data: {
-          update_Departement: updateDepartement,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          update_Departement: null,
-        },
-      };
-    }
-  }
-
-  static async deleteDepartement({ id }) {
-    try {
-      const deletedDepartement = await DepartementRepository.deleteById({
-        id,
-      });
-
-      return {
-        status: true,
-        status_code: 200,
-        message: "delete departement successfully",
-        data: {
-          delete_Departement: deletedDepartement,
-        },
-      };
-    } catch (error) {
-      return {
-        status: false,
-        status_code: 500,
-        message: error.message,
-        data: {
-          delete_Departement: null,
-        },
-      };
-    }
-  }
-}
-
-module.exports = DepartementService;
+    return result;
+  },
+};

@@ -1,77 +1,70 @@
-const PosisiService = require("../services/posisiService");
+const { StatusCodes } = require("http-status-codes");
+const {
+  createPosisi,
+  getAllPosisi,
+  getOnePosisi,
+  updatePosisi,
+  deletePosisi,
+} = require("../services/posisiService");
 
 const create = async (req, res, next) => {
-  const { jabatan } = req.body;
+  try {
+    const result = await createPosisi(req);
 
-  const { status, status_code, message, data } = await PosisiService.create({
-    jabatan,
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
-};
-
-const getAll = async (req, res, next) => {
-  const {} = req.body;
-
-  const { status, status_code, message, data } = await PosisiService.getAll({});
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
-};
-
-const getById = async (req, res, next) => {
-  const { id } = req.params;
-
-  const { status, status_code, message, data } =
-    await PosisiService.getPosisiById({
-      id,
+    res.status(StatusCodes.CREATED).json({
+      data: result,
     });
+  } catch (error) {
+    next(error);
+  }
+};
 
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+const index = async (req, res, next) => {
+  try {
+    const result = await getAllPosisi(req);
+
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getOne = async (req, res, next) => {
+  try {
+    const result = await getOnePosisi(req);
+
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const update = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const result = await updatePosisi(req);
 
-  const { jabatan } = req.body;
-
-  const { status, status_code, message, data } =
-    await PosisiService.updatePosisi({
-      id,
-      jabatan,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const deleteById = async (req, res, next) => {
-  const { id } = req.params;
+const destroy = async (req, res, next) => {
+  try {
+    const result = await deletePosisi(req);
 
-  const { status, status_code, message, data } =
-    await PosisiService.deletePosisi({
-      id,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-module.exports = { create, getAll, getById, update, deleteById };
+module.exports = { create, index, getOne, update, destroy };

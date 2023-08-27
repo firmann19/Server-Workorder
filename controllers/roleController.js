@@ -1,74 +1,70 @@
-const RoleService = require("../services/roleService");
+const { StatusCodes } = require("http-status-codes");
+const {
+  createRole,
+  getAllRole,
+  getOneRole,
+  updateRole,
+  deleteRole,
+} = require("../services/roleService");
 
 const create = async (req, res, next) => {
-  const { roleEmploye } = req.body;
+  try {
+    const result = await createRole(req);
 
-  const { status, status_code, message, data } = await RoleService.create({
-    roleEmploye,
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+    res.status(StatusCodes.CREATED).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const getAll = async (req, res, next) => {
-  const {} = req.body;
+const index = async (req, res, next) => {
+  try {
+    const result = await getAllRole(req);
 
-  const { status, status_code, message, data } = await RoleService.getAll({});
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const getById = async (req, res, next) => {
-  const { id } = req.params;
+const getOne = async (req, res, next) => {
+  try {
+    const result = await getOneRole(req);
 
-  const { status, status_code, message, data } = await RoleService.getRoleById({
-    id,
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const update = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const result = await updateRole(req);
 
-  const { roleEmploye } = req.body;
-
-  const { status, status_code, message, data } = await RoleService.updateRole({
-    id,
-    roleEmploye,
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const deleteById = async (req, res, next) => {
-  const { id } = req.params;
+const destroy = async (req, res, next) => {
+  try {
+    const result = await deleteRole(req);
 
-  const { status, status_code, message, data } = await RoleService.deleteRole({
-    id,
-  });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-module.exports = { create, getAll, getById, update, deleteById };
+module.exports = { create, index, getOne, update, destroy };

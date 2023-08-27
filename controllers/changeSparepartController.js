@@ -1,135 +1,83 @@
-const ChangeSparepartService = require("../services/changeSparepart");
+const { StatusCodes } = require("http-status-codes");
+const {
+  createChangeSparepart,
+  getAllChangeSparepart,
+  getOneChangeSparepart,
+  updateChangeSparepart,
+  deleteChangeSparepart,
+  changeStatusPengajuan,
+} = require("../services/changeSparepart");
 
 const create = async (req, res, next) => {
-  const {
-    userRequestWo,
-    departementUser,
-    namaSparepart,
-    harga,
-    jumlahOrder,
-    alasan,
-    statusPengajuan,
-    HeadIT,
-  } = req.body;
+  try {
+    const result = await createChangeSparepart(req);
 
-  const { status, status_code, message, data } =
-    await ChangeSparepartService.create({
-      userRequestWo,
-      departementUser,
-      namaSparepart,
-      harga,
-      jumlahOrder,
-      alasan,
-      statusPengajuan,
-      HeadIT,
+    res.status(StatusCodes.CREATED).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const getAll = async (req, res, next) => {
-  const {} = req.body;
+const index = async (req, res, next) => {
+  try {
+    const result = await getAllChangeSparepart(req);
 
-  const { status, status_code, message, data } =
-    await ChangeSparepartService.getAll({});
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const getById = async (req, res, next) => {
-  const { id } = req.params;
+const getOne = async (req, res, next) => {
+  try {
+    const result = await getOneChangeSparepart(req);
 
-  const { status, status_code, message, data } =
-    await ChangeSparepartService.getChangeSparepartById({
-      id,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const update = async (req, res, next) => {
-  const { id } = req.params;
+  try {
+    const result = await updateChangeSparepart(req);
 
-  const {
-    userRequestWo,
-    departementUser,
-    namaSparepart,
-    harga,
-    jumlahOrder,
-    alasan,
-    statusPengajuan,
-    HeadIT,
-  } = req.body;
-
-  const { status, status_code, message, data } =
-    await ChangeSparepartService.updateChangeSparepart({
-      id,
-      userRequestWo,
-      departementUser,
-      namaSparepart,
-      harga,
-      jumlahOrder,
-      alasan,
-      statusPengajuan,
-      HeadIT,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const deleteById = async (req, res, next) => {
-  const { id } = req.params;
+const destroy = async (req, res, next) => {
+  try {
+    const result = await deleteChangeSparepart(req);
 
-  const { status, status_code, message, data } =
-    await ChangeSparepartService.deleteChangeSparepart({
-      id,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const statusPengajuan = async (req, res, next) => {
-  const { id } = req.params;
-  const { statusPengajuan } = req.body;
+const changeStatus = async (req, res, next) => {
+  try {
+    const result = await changeStatusPengajuan(req);
 
-  const { status, status_code, message, data } =
-    await ChangeSparepartService.changeStatusPengajuan({
-      id,
-      statusPengajuan,
+    res.status(StatusCodes.OK).json({
+      data: result,
     });
-
-  res.status(status_code).send({
-    status: status,
-    message: message,
-    data: data,
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 
-module.exports = {
-  create,
-  getAll,
-  getById,
-  update,
-  deleteById,
-  statusPengajuan,
-};
+module.exports = { create, index, getOne, update, destroy, changeStatus };
