@@ -123,7 +123,7 @@ app.put("/api/v1/statusWO/:id", authenticateUser, checkoutController.StatusWO);
 app.put(
   "/api/v1/statusPengerjaan/:id",
   authenticateUser,
-  authorizeRoles(2),
+  authorizeRoles(2,3),
   checkoutController.StatusPengerjaan
 );
 

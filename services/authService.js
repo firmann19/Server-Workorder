@@ -65,6 +65,12 @@ module.exports = {
 
     const WorkOrder = await Checkout.count();
 
+    const TotalUser = await User.count();
+
+    const TotalDepartement = await Departement.count();
+
+    const TotalGroup = await Group.count();
+
     const isPasswordCorrect = comparePassword(password, getUser.password);
 
     if (!isPasswordCorrect) {
@@ -89,6 +95,9 @@ module.exports = {
       getNameManager: (getUserByRole.name = "Firman"),
       getManager: (getUserByRole.id = 36),
       getCountWO: WorkOrder,
+      getCountUser: TotalUser,
+      getCountDepartement: TotalDepartement,
+      getCountGroup: TotalGroup,
     };
   },
 

@@ -161,17 +161,18 @@ module.exports = {
 
     const { otp } = req.body;
 
-    const check = await Checkout.findOne({ id });
+    //const check = await Checkout.findOne({ id });
 
-    if (check) throw new NotFoundError(`Tidak ada checkout dengan id :  ${id}`);
+    //if (check) throw new NotFoundError(`Tidak ada checkout dengan id :  ${id}`);
 
     const result = await Checkout.update(
-      {
-        where: { id },
-      },
+
       {
         otp,
         StatusWO: "Approve",
+      },
+      {
+        where: { id },
       }
     );
 
@@ -183,16 +184,17 @@ module.exports = {
 
     const { StatusPengerjaan } = req.body;
 
-    const check = await Checkout.findOne({ id });
+    //const check = await Checkout.findOne({ id });
 
-    if (check) throw new NotFoundError(`Tidak ada checkout dengan id :  ${id}`);
+    //if (check) throw new NotFoundError(`Tidak ada checkout dengan id :  ${id}`);
 
     const result = await Checkout.update(
-      {
-        where: { id },
-      },
+
       {
         StatusPengerjaan,
+      },
+      {
+        where: { id },
       }
     );
 
@@ -202,16 +204,17 @@ module.exports = {
   changeStatusProgress: async (req, res) => {
     const { id } = req.params;
 
-    const check = await Checkout.findOne({ id });
+    //const check = await Checkout.findOne({ id });
 
-    if (check) throw new NotFoundError(`Tidak ada checkout dengan id :  ${id}`);
+    //if (check) throw new NotFoundError(`Tidak ada checkout dengan id :  ${id}`);
 
     const result = await Checkout.update(
+
       {
-        where: { id },
+        StatusPengerjaan: 'Close',
       },
       {
-        StatusPengerjaan: "Close",
+        where: { id },
       }
     );
 
